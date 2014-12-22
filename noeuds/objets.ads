@@ -1,7 +1,7 @@
 with Ada.Text_IO, Ada.Integer_Text_IO;
 use Ada.Text_IO, Ada.Integer_Text_IO;
 
-package Objects is
+package Objets is
    
    type Indice_Tab is array(Positive range <>) of Natural;   
    type Tab_Ptr is access Indice_Tab;
@@ -11,8 +11,9 @@ package Objects is
       Y : Float;
    end record;
    
+   type Indice is Natural;
+   
    type Sommet is record
-      Indice : Natural; -- Indice du sommet
       Pos : Point; -- Position du sommet
       Nb_Arretes : Natural; -- Nombre de sommets adjacents
       Voisins : Tab_Ptr; -- Pointeur vers tableau d'indices des sommets adj
@@ -20,4 +21,4 @@ package Objects is
    
    procedure Put (S : Sommet);
    
-end Objects;
+end Objets;
