@@ -1,8 +1,8 @@
 with Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO;
 use Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO;
 
-with Objects, Liste;
-use Objects, Liste;
+with Objets, Liste, Svg;
+use Objets, Liste;
 
 package body Parseur is
    
@@ -14,6 +14,8 @@ package body Parseur is
 		      Nb_Sommets : out Natural) 
    is      
       Fichier : File_Type;
+      X_Max : Float := 0.0; -- Abcisse maximale des sommets
+      Y_Max : Float := 0.0; -- Ordonnée maximale des sommets
       
       procedure Get (F: in File_Type; L: out Liste_Sommets; I: Natural) is 
 	 S : Sommet;
@@ -22,7 +24,14 @@ package body Parseur is
 	 
 	 -- Parsing des attributs du sommet	 
      	 Get (F, S.Pos.X);
-	 Get (F, S.Pos.Y);
+	 if S.Pos.X > X_Max then
+	    X_Max := S.Pos.X;
+	 end if;
+	 
+	 Get (F, S.Pos.Y);	 
+	 if S.Pos.Y > Y_Max then
+	    Y_Max := S.Pos.Y;
+	 end if;
 	 
 	 Get (F, S.Nb_Arretes);
 	 
@@ -47,11 +56,15 @@ package body Parseur is
 	 Get (Fichier, L, S);
       end loop;
       
-      Close (Fichier);
+      Close (Fichier);            
       
       if Nb_Sommets = 0 then 
       	 raise Nombre_Sommets_Nul; 
       end if;
+      
+      -- Stockage de la taille de l'image SVG en sortie
+      Svg.Affichage.Largeur := X_Max + Svg.Marge_Affichage;
+      Svg.Affichage.Hauteur := Y_Max + Svg.Marge_Affichage;
       
    exception
       when End_Error | Name_Error | Data_Error | Layout_Error
