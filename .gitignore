@@ -8,4 +8,7 @@
 **/*~
 
 # Executable
-noeuds
+noeuds/noeuds
+
+#Svg files
+**/*.svg
