@@ -1,5 +1,5 @@
-with Objects, Liste;
-use Objects, Liste;
+with Objets, Liste;
+use Objets, Liste;
 
 package Parseur is
    
