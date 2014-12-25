@@ -16,6 +16,16 @@ package body Pile is
       
    end Push;
    
+   --  procedure Push_Back (Tete : in out Pile; I : in Indice) is
+   --     Cour : Pile := Tete;
+   --  begin                 
+   --     while Cour /= null loop
+   --  	 Cour := Cour.Suiv;
+   --     end loop;        
+      
+   --     Push (Cour, I)            
+   --  end Push;
+   
    procedure Pop (Tete : in out Pile) is
       procedure Free is new Ada.Unchecked_Deallocation(Cellule, Pile);
       Temp : Tete;
