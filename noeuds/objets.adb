@@ -6,12 +6,12 @@ use Pile;
 
 package body Objets is
    
-   procedure Put (S : Sommet) is 
+   procedure Put (S : Sommet) is       
       
       function Point2Str (P : Point) return String is 
       begin
 	 return "(" & Float'Image (P.X) & ", " & Float'Image (P.Y) & " )";
-      end Point2Str;
+      end Point2Str;      
       
    begin       
       Put_Line ("Position: " & Point2Str (S.Pos));
@@ -23,9 +23,9 @@ package body Objets is
    procedure Put (T : Tab_Sommets) is            
    begin       
       for I in T'Range loop
-	 Put_Line ("---- Sommet" & Integer'Image(I) & " ----");
+	 Put_Line ("---- Sommet" & Integer'Image(Integer (I)) & " ----");
 	 Put (T(I));
       end loop;
    end Put;
-            
+   
 end Objets;
