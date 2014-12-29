@@ -1,8 +1,8 @@
 with Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO;
 use Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO;
 
-with Objets;
-use Objets;
+with Objets, Pile;
+use Objets, Pile;
 
 package body Svg is
    
@@ -24,7 +24,7 @@ package body Svg is
    end Code_Couleur;
    
    procedure Sauvegarde (Nom_Fichier_Svg : in String;
-                         L : in Liste_Sommets)
+                         T : in out Tab_Sommets)
    is
       Fichier_Svg : File_Type;
       
@@ -65,12 +65,34 @@ package body Svg is
 	 Put_Line (Fichier_Svg, ";stroke-width:1""/>");
       end Svg_Line;
       
+      -- Pour chaque sommet, trace ses arretes adjacentes
+      procedure Trace_Arretes is
+	 V : Indice;
+      begin
+	 -- Tracé d'une arrete pour chaque couple d'indices
+	 for I in reverse T'Range loop
+	    -- Tant que la pile du sommet courant n'est pas vide, 
+	    -- tracé est mis a jour des piles
+	    while not Vide (T(I).Voisins) loop
+	       -- Recuperation de l'indice du voisin
+	       Pop (T(I).Voisins, V);
+	       --  -- Tracé du segment
+	       Svg_Line (T(I).Pos, T(V).Pos);
+	       --  -- Elimination de la redondance dans la pile du voisin
+	       Pop (T(V).Voisins, V); -- V sert de "poubelle"
+	    end loop;
+	 end loop;
+	
+      end Trace_Arretes;
+      
    begin
       Create (File => Fichier_Svg,
 	    Mode => Out_File,
 	    Name => Nom_Fichier_Svg);
       
       Svg_Header;      
+      
+      Trace_Arretes;
       
       Svg_Footer;      
       
