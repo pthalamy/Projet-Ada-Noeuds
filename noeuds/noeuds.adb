@@ -10,7 +10,7 @@ use Objets, Pile;
 -- NOTE: Pile implémentée. 
 -- TODO: Implementation du tableau et supplantation de la liste.
 procedure Noeuds is
-   Nb_Sommets : Natural;
+   Nb_Sommets : Indice;
 begin
 
    if Argument_Count /= 2 then
@@ -19,10 +19,10 @@ begin
    end if;
    
    Parseur.Lecture_Nombre_Sommets (Argument(1), Nb_Sommets);
-   Put_Line ("Nombre de sommets: " & Integer'Image(Nb_Sommets));
+   Put_Line ("Nombre de sommets: " & Integer'Image(Integer (Nb_Sommets)));
    
    declare
-      Sommets : Tab_Sommets := Tab_Sommets'(1..Nb_Sommets);
+      Sommets : Tab_Sommets(1..Nb_Sommets);
    begin
       Parseur.Lecture(Sommets);
       Put (Sommets);
