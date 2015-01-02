@@ -63,7 +63,7 @@ package body Pile is
       when Pile_Vide =>
 	 Put_Line ("Pile_Vide: Affichage impossible, la pile est vide.");	 
    end Put;    
-   
+    
    function Vide (Tete : in Pile_Sommets) return Boolean is 
    begin 
       if Tete = null then

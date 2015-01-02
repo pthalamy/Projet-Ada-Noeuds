@@ -1,5 +1,8 @@
 with Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO;
+with Ada.Numerics.Elementary_Functions;
+
 use Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO;
+use Ada.Numerics.Elementary_Functions;
 
 with Objets, Pile;
 use Objets, Pile;
@@ -23,6 +26,11 @@ package body Svg is
       end case;
    end Code_Couleur;
    
+   function Hypotenuse (A, B : Float) return Float is
+   begin
+      return sqrt(A**2 + B**2);
+   end Hypotenuse;
+   
    procedure Sauvegarde (Nom_Fichier_Svg : in String;
                          T : in out Tab_Sommets)
    is
@@ -33,9 +41,11 @@ package body Svg is
       procedure Svg_Header is
       begin
 	 Put (Fichier_Svg, "<svg width=""");
-	 Put (Fichier_Svg, Affichage.Largeur);
+	 --  Put (Fichier_Svg, Affichage.Largeur);
+	 Put (Fichier_Svg, "100");
 	 Put (Fichier_Svg, """ height=""");
-	 Put (Fichier_Svg, Affichage.Hauteur);
+	 --  Put (Fichier_Svg, Affichage.Hauteur);
+	 Put (Fichier_Svg, "100");
 	 Put_Line (Fichier_Svg, """>");
       end Svg_Header;
 
@@ -62,29 +72,26 @@ package body Svg is
 
 	 Put (Fichier_Svg, Code_Couleur (Noir));
 
-	 Put_Line (Fichier_Svg, ";stroke-width:1""/>");
+	 Put_Line (Fichier_Svg, ";stroke-width:0.02""/>");
       end Svg_Line;
-      
-      -- Pour chaque sommet, trace ses arretes adjacentes
-      procedure Trace_Arretes is
-	 V : Indice;
-      begin
-	 -- Tracé d'une arrete pour chaque couple d'indices
-	 for I in reverse T'Range loop
-	    -- Tant que la pile du sommet courant n'est pas vide, 
-	    -- tracé est mis a jour des piles
-	    while not Vide (T(I).Voisins) loop
-	       -- Recuperation de l'indice du voisin
-	       Pop (T(I).Voisins, V);
-	       --  -- Tracé du segment
-	       Svg_Line (T(I).Pos, T(V).Pos);
-	       --  -- Elimination de la redondance dans la pile du voisin
-	       Pop (T(V).Voisins, V); -- V sert de "poubelle"
-	    end loop;
-	 end loop;
-	
-      end Trace_Arretes;
-      
+            
+      -- TODO : Tracer croix
+      --  procedure Trace_Croix is
+      --  	 Longueur_Seg : Float; -- Longueur du segment
+      --  	 DX, DY : Float; -- Différentiels en X et Y
+      --  	 Milieu : Point; -- Milieu du segment
+      --  begin
+      --  	 DX = abs (T(I).Pos.X - T(V).Pos.X);
+      --  	 DY = abs (T(I).Pos.Y - T(V).Pos.Y);
+      --  	 Longueur_Seg := Hypotenuse(DX, DY);
+	 
+      --  	 Milieu.X := T(I).Pos.X + (T(I).Pos.X - T(V).Pos.X / 2);
+      --  	 Milieu.Y := T(I).Pos.Y + (T(I).Pos.Y - T(V).Pos.Y / 2);
+	 
+	 
+      --  end Trace_Croix;
+		    
+      V : Indice;
    begin
       Create (File => Fichier_Svg,
 	    Mode => Out_File,
@@ -92,7 +99,22 @@ package body Svg is
       
       Svg_Header;      
       
-      Trace_Arretes;
+      
+      -- Tracé pour chaque couple d'indice
+      for I in reverse T'Range loop
+	 -- Tant que la pile du sommet courant n'est pas vide, 
+	 -- tracé est mis a jour des piles
+	 while not Vide (T(I).Voisins) loop
+	    -- Recuperation de l'indice du voisin
+	    Pop (T(I).Voisins, V);
+	    -- Tracé du segment
+	    Svg_Line (T(I).Pos, T(V).Pos);
+	    -- TODO: Puis de la croix
+	    --  Trace_Croix;
+	    -- Elimination de la redondance dans la pile du voisin
+	    Pop (T(V).Voisins, V); -- V sert de "poubelle"
+	 end loop;
+      end loop;
       
       Svg_Footer;      
       

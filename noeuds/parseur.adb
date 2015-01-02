@@ -42,11 +42,17 @@ package body Parseur is
 	 -- Parsing des attributs du sommet	 
 	 ---- Position X
      	 Get (Fichier_Kn, T(I).Pos.X);
+	 ------ Add X Offset
+	 T(I).Pos.X := T(I).Pos.X + X_Offset;
+	 
 	 if T(I).Pos.X > X_Max then
 	    X_Max := T(I).Pos.X;
 	 end if;
 	 ---- Position Y	 
 	 Get (Fichier_Kn, T(I).Pos.Y);	 
+	 ------ Add Y Offset
+	 T(I).Pos.Y := T(I).Pos.Y + Y_Offset;
+
 	 if T(I).Pos.Y > Y_Max then
 	    Y_Max := T(I).Pos.Y;
 	 end if;	

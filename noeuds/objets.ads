@@ -24,6 +24,9 @@ package Objets is
    end record;      
    
    type Tab_Sommets is array(Indice range <>) of Sommet;
+   
+   X_Offset : constant Float := 50.0;
+   Y_Offset : constant Float := 50.0;
       
    procedure Put (S : Sommet);
    procedure Put (T : Tab_Sommets);
