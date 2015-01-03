@@ -76,20 +76,51 @@ package body Svg is
       end Svg_Line;
             
       -- TODO : Tracer croix
-      --  procedure Trace_Croix is
-      --  	 Longueur_Seg : Float; -- Longueur du segment
-      --  	 DX, DY : Float; -- Différentiels en X et Y
-      --  	 Milieu : Point; -- Milieu du segment
-      --  begin
-      --  	 DX = abs (T(I).Pos.X - T(V).Pos.X);
-      --  	 DY = abs (T(I).Pos.Y - T(V).Pos.Y);
-      --  	 Longueur_Seg := Hypotenuse(DX, DY);
+      procedure Trace_Croix (L, R : Point)is
+      	 LR : Float; -- Longueur du segment L-R
+      	 DX, DY : Float; -- Différentiels en X et Y
+      	 Milieu : Point; -- Milieu du segment
+	 A, B, C, D : Point; -- extrémités des segments de croix
+	 Alpha : Float; -- Angle ^LR
+	 Base : constant Float := 360.0; -- Nous utilisons des degrés
+      begin
+      	 DX := abs (R.X - L.X);
+      	 DY := abs (R.Y - L.Y);
+      	 LR := Hypotenuse (DX, DY);
 	 
-      --  	 Milieu.X := T(I).Pos.X + (T(I).Pos.X - T(V).Pos.X / 2);
-      --  	 Milieu.Y := T(I).Pos.Y + (T(I).Pos.Y - T(V).Pos.Y / 2);
+	 if R.X > L.X then 
+	    Alpha := Arcsin (DY / LR, Base);
+	 else 
+	    Alpha := 360.0 - Arcsin (DY / LR, Base);
+	 end if;
+
+	 New_Line; 
+	 Put (LR); New_Line; 
+	 Put (Alpha); New_Line;
 	 
+	 Put_Line ("L.X=" & Float'Image(L.X)
+		     & " L.Y=" & Float'Image(L.Y));
 	 
-      --  end Trace_Croix;
+	 Put_Line ("R.X=" & Float'Image(R.X)
+		     & " R.Y=" & Float'Image(R.Y));
+	 
+      	 Milieu.X := L.X + ((R.X - (L.X)) / 2.0);
+      	 Milieu.Y := L.Y + ((R.Y - (L.Y)) / 2.0);
+	 
+	 Put_Line ("Milieu.X=" & Float'Image(Milieu.X)
+		  & " Milieu.Y=" & Float'Image(Milieu.Y));
+	 
+	 A := Point'( Milieu.X + (Cos (Alpha + 45.0, Base))*(LR / 4.0), 
+		      Milieu.Y + (Sin (Alpha + 45.0, Base))*(LR / 4.0) );
+	 B := Point'( Milieu.X + (Cos (Alpha + 225.0, Base))*(LR / 4.0), 
+		      Milieu.Y + (Sin (Alpha + 225.0, Base))*(LR / 4.0) );
+	 Svg_Line (A, B);
+	 C := Point'( Milieu.X + (Cos (Alpha + 135.0, Base))*(LR / 4.0), 
+		      Milieu.Y + (Sin (Alpha + 135.0, Base))*(LR / 4.0) );
+	 D := Point'( Milieu.X + (Cos (Alpha + 315.0, Base))*(LR / 4.0),
+		      Milieu.Y + (Sin (Alpha + 315.0, Base))*(LR / 4.0) );
+	 Svg_Line (C, D);	
+      end Trace_Croix;
 		    
       V : Indice;
    begin
@@ -110,7 +141,7 @@ package body Svg is
 	    -- Tracé du segment
 	    Svg_Line (T(I).Pos, T(V).Pos);
 	    -- TODO: Puis de la croix
-	    --  Trace_Croix;
+	    Trace_Croix (T(I).Pos, T(V).Pos);
 	    -- Elimination de la redondance dans la pile du voisin
 	    Pop (T(V).Voisins, V); -- V sert de "poubelle"
 	 end loop;
