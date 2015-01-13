@@ -13,7 +13,7 @@ begin
       return;
    end if;
 
-   --  Parseur.Lecture_Nombre_Sommets (Argument(1), Nb_Sommets);
+   Parseur.Lecture_Nombre_Sommets (Argument(1), Nb_Sommets);
    Put_Line ("Nombre de sommets: " & Integer'Image(Integer (Nb_Sommets)));
 
    declare
