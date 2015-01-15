@@ -74,7 +74,7 @@ package body Svg is
 
 	 Put_Line (Fichier_Svg, ";stroke-width:0.02""/>");
       end Svg_Line;
-            
+      
       -- TODO : Tracer croix
       procedure Trace_Croix (L, R : Point)is
       	 LR : Float; -- Longueur du segment L-R
@@ -108,25 +108,39 @@ package body Svg is
       	 Milieu.Y := L.Y + ((R.Y - (L.Y)) / 2.0);
 	 
 	 Put_Line ("Milieu.X=" & Float'Image(Milieu.X)
-		  & " Milieu.Y=" & Float'Image(Milieu.Y));
+		     & " Milieu.Y=" & Float'Image(Milieu.Y));
 	 
-	 A := Point'( Milieu.X + (Cos (Alpha + 45.0, Base))*(LR / 4.0), 
-		      Milieu.Y + (Sin (Alpha + 45.0, Base))*(LR / 4.0) );
-	 B := Point'( Milieu.X + (Cos (Alpha + 225.0, Base))*(LR / 4.0), 
-		      Milieu.Y + (Sin (Alpha + 225.0, Base))*(LR / 4.0) );
-	 Svg_Line (A, B);
-	 C := Point'( Milieu.X + (Cos (Alpha + 135.0, Base))*(LR / 4.0), 
-		      Milieu.Y + (Sin (Alpha + 135.0, Base))*(LR / 4.0) );
-	 D := Point'( Milieu.X + (Cos (Alpha + 315.0, Base))*(LR / 4.0),
-		      Milieu.Y + (Sin (Alpha + 315.0, Base))*(LR / 4.0) );
-	 Svg_Line (C, D);	
+	 A := Point'( Milieu.X + (1.0/4.0)*(Cos (45.0, Base)*(L.X-Milieu.X)-Sin(45.0,Base)*(L.Y-Milieu.Y)), 
+		      Milieu.Y + (1.0/4.0)*((L.X-Milieu.X)*Sin (45.0, Base)+(L.Y-Milieu.Y)*Cos(45.0,Base)));
+	 B := Point'( Milieu.X + (1.0/4.0)*(Cos (225.0, Base)*(L.X-Milieu.X)-Sin(225.0,Base)*(L.Y-Milieu.Y)), 
+		      Milieu.Y + (1.0/4.0)*((L.X-Milieu.X)*Sin (225.0, Base)+(L.Y-Milieu.Y)*Cos(225.0,Base)));
+	 Svg_Line(A,B);
+	 
+	 
+	 C:= Point'( Milieu.X + (1.0/4.0)*(Cos (45.0+90.0, Base)*(L.X-Milieu.X)-Sin(45.0+90.0,Base)*(L.Y-Milieu.Y)), 
+		     Milieu.Y + (1.0/4.0)*((L.X-Milieu.X)*Sin (45.0+90.0, Base)+(L.Y-Milieu.Y)*Cos(45.0+90.0,Base)));
+	 D := Point'( Milieu.X + (1.0/4.0)*(Cos (225.0+90.0, Base)*(L.X-Milieu.X)-Sin(225.0+90.0,Base)*(L.Y-Milieu.Y)), 
+		      Milieu.Y + (1.0/4.0)*((L.X-Milieu.X)*Sin (225.0+90.0, Base)+(L.Y-Milieu.Y)*Cos(225.0+90.0,Base)));
+	 Svg_Line(C,D);
+	 
+	 --  A := Point'( Milieu.X + (Cos (Alpha + 45.0, Base))*(LR / 4.0), 
+	 --  	      Milieu.Y + (Sin (Alpha + 45.0, Base))*(LR / 4.0) );
+	 --  B := Point'( Milieu.X + (Cos (Alpha + 225.0, Base))*(LR / 4.0), 
+	 --  	      Milieu.Y + (Sin (Alpha + 225.0, Base))*(LR / 4.0) );
+	 --  Svg_Line (A, B);
+	 --  C := Point'( Milieu.X + (Cos (Alpha + 135.0, Base))*(LR / 4.0), 
+	 --  	      Milieu.Y + (Sin (Alpha + 135.0, Base))*(LR / 4.0) );
+	 --  D := Point'( Milieu.X + (Cos (Alpha + 315.0, Base))*(LR / 4.0),
+	 --  	      Milieu.Y + (Sin (Alpha + 315.0, Base))*(LR / 4.0) );
+	 --  Svg_Line (C, D);
+	 
       end Trace_Croix;
-		    
+      
       V : Indice;
    begin
       Create (File => Fichier_Svg,
-	    Mode => Out_File,
-	    Name => Nom_Fichier_Svg);
+	      Mode => Out_File,
+	      Name => Nom_Fichier_Svg);
       
       Svg_Header;      
       
