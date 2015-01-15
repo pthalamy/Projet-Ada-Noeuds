@@ -11,7 +11,10 @@ package Objets is
       X : Float;
       Y : Float;
    end record;
-
+   
+   type CelluleS;
+   type Pile_Sommets is access CelluleS;
+   
    type Sommet is record
       Pos : Point; -- Position du sommet
       Voisins : Pile_Sommets; -- Pointeur vers tableau d'indices
@@ -33,7 +36,7 @@ package Objets is
 
    -- Types de gestion de liste
    type CelluleA;
-   type PointeurA is access Cellule;
+   type PointeurA is access CelluleA;
 
    type Liste_Arretes is record
       Tete, Queue : PointeurA;
@@ -45,14 +48,10 @@ package Objets is
    end record;
 
    -- Types de gestion de pile
-   type CelluleS;
-   type Pile_Sommets is access CelluleS;
-
    type CelluleS is record
       Val : Indice;
       Suiv : Pile_Sommets;
    end record;
-
 
    -- Types de gestion SVG
    X_Max, Y_Max : Float;
