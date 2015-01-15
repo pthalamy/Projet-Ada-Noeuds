@@ -40,29 +40,56 @@ package body Traitement is
 					  L : in out Liste_Arretes) 
    is 
       
-      --  procedure Generer_Croix is
-      --  	 A, B, C, D : Point; -- extrémités des segments de croix
-      --  	 Alpha : Float; -- Angle ^LR
-      --  	 Base : constant Float := 360.0; -- Nous utilisons des degrés
-      --  begin
-      
-      --  	 if R.X > L.X then 
-      --  	    Alpha := Arcsin (DY / LR, Base);
-      --  	 else 
-      --  	    Alpha := 360.0 - Arcsin (DY / LR, Base);
-      --  	 end if;
-      
-      --  	 A := Point'( Milieu.X + (Cos (Alpha + 45.0, Base))*(LR / 4.0), 
-      --  		      Milieu.Y + (Sin (Alpha + 45.0, Base))*(LR / 4.0) );
-      --  	 B := Point'( Milieu.X + (Cos (Alpha + 225.0, Base))*(LR / 4.0), 
-      --  		      Milieu.Y + (Sin (Alpha + 225.0, Base))*(LR / 4.0) );
+      procedure Generer_Croix (A : in out Arrete) is
+      	 Alpha : Float; -- Angle ^LR
+      	 Base : constant Float := 360.0; -- Nous utilisons des degrés
+	 
+	 R : Point := T(A.S1).Pos;
+	 L : Point := T(A.S2).Pos;
+	 M : Point := A.Milieu;
+	 DY : Float;
+	 
+      begin
+	 
+	 DY := abs (R.Y - L.Y);
 
-      --  	 C := Point'( Milieu.X + (Cos (Alpha + 135.0, Base))*(LR / 4.0), 
-      --  		      Milieu.Y + (Sin (Alpha + 135.0, Base))*(LR / 4.0) );
-      --  	 D := Point'( Milieu.X + (Cos (Alpha + 315.0, Base))*(LR / 4.0),
-      --  		      Milieu.Y + (Sin (Alpha + 315.0, Base))*(LR / 4.0) );
+	 if R.X > L.X then 
+	    Alpha := Arcsin (DY / A.Longueur, Base);
+	 else 
+	    Alpha := 360.0 - Arcsin (DY / A.Longueur, Base);
+	 end if;
+	 
+	 A.PDC.Trig(1) := Point'
+	   ( M.X + 
+	       (1.0 / 4.0)*(Cos (45.0, Base)*(L.X - M.X) - 
+			      Sin(45.0,Base)*(L.Y - M.Y)), 
+	     M.Y + 
+	       (1.0 / 4.0)*((L.X - M.X)*Sin (45.0, Base) 
+			      + (L.Y - M.Y)*Cos(45.0,Base)) );
+	 A.PDC.Trig(2) := Point'
+	   ( M.X + 
+	       (1.0 / 4.0)*(Cos (225.0, Base)*(L.X - M.X) - 
+			      Sin(225.0,Base)*(L.Y - M.Y)), 
+	     M.Y + 
+	       (1.0 / 4.0)*((L.X - M.X)*Sin (225.0, Base) + 
+			      (L.Y - M.Y)*Cos(225.0,Base)));
+	 
+	 A.PDC.Inv(1) := Point'
+	   ( M.X + 
+	       (1.0 / 4.0)*(Cos (45.0 + 90.0, Base)*(L.X - M.X) - 
+			      Sin(45.0 + 90.0,Base)*(L.Y - M.Y)),
+	     M.Y + 
+	       (1.0 / 4.0)*((L.X - M.X)*Sin (45.0 + 90.0, Base) + 
+			      (L.Y - M.Y)*Cos(45.0 + 90.0,Base)) );
+	 A.PDC.Inv(2) := Point'	  
+	   ( M.X + 
+	       (1.0 / 4.0)*(Cos (225.0 + 90.0, Base)*(L.X - M.X) - 
+			      Sin(225.0 + 90.0,Base)*(L.Y - M.Y)), 
+	     M.Y + 
+	       (1.0 / 4.0)*((L.X - M.X)*Sin (225.0 + 90.0, Base) +
+			      (L.Y - M.Y)*Cos(225.0 + 90.0,Base)) );
 
-      --  end Generer_Croix;
+      end Generer_Croix;
 
       procedure Calculer_Longueur (A : in out Arrete) is 
 	 
@@ -87,6 +114,7 @@ package body Traitement is
    begin
       while Cour /= null loop
 	 Calculer_Longueur (Cour.Val);
+	 Generer_Croix (Cour.Val);
 	 Cour := Cour.Suiv;
       end loop;
    end Calculer_Points_De_Controle;
