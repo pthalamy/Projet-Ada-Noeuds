@@ -20,14 +20,16 @@ package Objets is
       Voisins : Pile_Sommets; -- Pointeur vers tableau d'indices
                               -- des sommets adjacents
    end record;
-
+   
+   type Tab_Points is array (1..2) of Point;
    type PtsDeCtrl is record
-      C1, C2, C3, C4 : Point;
+      Trig, Inv : Tab_Points;
    end record;
 
    type Arrete is record
       S1, S2 : Indice;
       Longueur : Float;
+      Milieu : Point;
       PDC : PtsDeCtrl;
    end record;
 

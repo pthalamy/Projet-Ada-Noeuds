@@ -33,11 +33,14 @@ package body Objets is
       Put_Line ("Arrete : [" & Integer'Image (Natural (A.S1)) & ","
                   & Integer'Image (Natural (A.S2)) & " ]");
       Put_Line ("Longueur: " & Float'Image (A.Longueur));
+      Put_Line ("Milieur: " & Point2Str(A.Milieu));
       Put_Line ("Points de controle: ");
-      Put_Line (Point2Str(A.PDC.C1));
-      Put_Line (Point2Str(A.PDC.C2));
-      Put_Line (Point2Str(A.PDC.C3));
-      Put_Line (Point2Str(A.PDC.C4));
+      Put_Line ("  Sens Trigonométrique: ");
+      Put_Line (Point2Str (A.PDC.Trig(1)));
+      Put_Line (Point2Str (A.PDC.Trig(2)));
+      Put_Line ("  Sens Inverse: ");
+      Put_Line (Point2Str (A.PDC.Inv(1)));
+      Put_Line (Point2Str (A.PDC.Inv(2)));
    end Put;
 
 
