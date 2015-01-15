@@ -12,4 +12,7 @@ package Traitement is
    procedure Generer_Arretes (T : in out Tab_Sommets;
 			      L : in out Liste_Arretes);
    
+   procedure Calculer_Points_De_Controle (T : in out Tab_Sommets;
+					  L : in out Liste_Arretes);
+   
 end Traitement;

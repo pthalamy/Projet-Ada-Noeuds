@@ -26,6 +26,7 @@ begin
 
       -- Traitement ?
       Traitement.Generer_Arretes (Sommets, Arretes);
+      Traitement.Calculer_Points_De_Controle (Sommets, Arretes);
       Put (Arretes);
 
       --  Svg.Sauvegarde(Argument(2), Sommets);
