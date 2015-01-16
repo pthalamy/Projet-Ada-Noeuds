@@ -14,7 +14,7 @@ begin
    end if;
 
    Parseur.Lecture_Nombre_Sommets (Argument(1), Nb_Sommets);
-   
+
    Put_Line ("Nombre de sommets: " & Integer'Image(Integer (Nb_Sommets)));
 
    declare
@@ -29,7 +29,7 @@ begin
       Traitement.Calculer_Points_De_Controle (Sommets, Arretes);
       Put (Arretes);
 
-      --  Svg.Sauvegarde(Argument(2), Sommets);
+      Svg.Sauvegarde(Argument(2), Sommets, Arretes);
    end;
 
 end Noeuds;

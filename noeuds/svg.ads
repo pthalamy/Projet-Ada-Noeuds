@@ -11,5 +11,6 @@ package Svg is
    Image : GrilleSVG;
 
    procedure Sauvegarde (Nom_Fichier_Svg : in String;
-                         T : in out Tab_Sommets);
+                         T : in out Tab_Sommets;
+                         L : in out Liste_Arretes);
 end Svg;

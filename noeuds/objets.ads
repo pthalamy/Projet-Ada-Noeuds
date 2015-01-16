@@ -11,16 +11,16 @@ package Objets is
       X : Float;
       Y : Float;
    end record;
-   
+
    type CelluleS;
    type Pile_Sommets is access CelluleS;
-   
+
    type Sommet is record
       Pos : Point; -- Position du sommet
       Voisins : Pile_Sommets; -- Pointeur vers tableau d'indices
                               -- des sommets adjacents
    end record;
-   
+
    type Tab_Points is array (1..2) of Point;
    type PtsDeCtrl is record
       Trig, Inv : Tab_Points;
@@ -57,7 +57,8 @@ package Objets is
 
    -- Types de gestion SVG
    X_Max, Y_Max : Float;
-   X_Offset, Y_Offset : Float;
+   X_Min, Y_Min : Float;
+   Coeff_Marge: Float := 1.5;
 
    procedure Put (S : Sommet);
    procedure Put (T : Tab_Sommets);
