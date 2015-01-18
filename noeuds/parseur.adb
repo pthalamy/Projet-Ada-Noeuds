@@ -113,6 +113,7 @@ package body Parseur is
             Arrete_Courante := new Arrete'(MonId => I,
 					   AutreID => Indice_Courant,
 					   Longueur => 0.0,
+					   Traitee => False,
 					   Milieu => (others => 0.0),
 					   others => (others => 
 							(others => 0.0)) );
