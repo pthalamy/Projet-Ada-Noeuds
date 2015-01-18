@@ -48,7 +48,17 @@ package body Traitement is
          L : Point := T(A.S2).Pos;
          M : Point := A.Milieu;
          DY : Float;
-
+	 
+	 function Calcul_PDC (Rot, Fact : Float) return Point is 
+	    Ret : Point;
+	 begin
+	    Ret.X := M.X + Fact * (Cos (Rot, Base) * (L.X - M.X) 
+				     - Sin (Rot, Base) * (L.Y - M.Y));
+	    Ret.Y := M.Y + Fact * (Sin (Rot, Base) * (L.X - M.X)
+				     + Cos (Rot,Base) * (L.Y - M.Y));
+	    return Ret;
+	 end Calcul_PDC;
+	 
       begin
 
          DY := abs (R.Y - L.Y);
@@ -59,36 +69,11 @@ package body Traitement is
             Alpha := 360.0 - Arcsin (DY / A.Longueur, Base);
          end if;
 
-         A.PDC.Trig(1) := Point'
-           ( M.X +
-               (1.0 / 2.0)*(Cos (45.0, Base)*(L.X - M.X) -
-                              Sin(45.0,Base)*(L.Y - M.Y)),
-             M.Y +
-               (1.0 / 2.0)*((L.X - M.X)*Sin (45.0, Base)
-                              + (L.Y - M.Y)*Cos(45.0,Base)) );
-         A.PDC.Trig(2) := Point'
-           ( M.X +
-               (1.0 / 2.0)*(Cos (225.0, Base)*(L.X - M.X) -
-                              Sin(225.0,Base)*(L.Y - M.Y)),
-             M.Y +
-               (1.0 / 2.0)*((L.X - M.X)*Sin (225.0, Base) +
-                              (L.Y - M.Y)*Cos(225.0,Base)));
-
-         A.PDC.Inv(1) := Point'
-           ( M.X +
-               (1.0 / 2.0)*(Cos (45.0 + 90.0, Base)*(L.X - M.X) -
-                              Sin(45.0 + 90.0,Base)*(L.Y - M.Y)),
-             M.Y +
-               (1.0 / 2.0)*((L.X - M.X)*Sin (45.0 + 90.0, Base) +
-                              (L.Y - M.Y)*Cos(45.0 + 90.0,Base)) );
-         A.PDC.Inv(2) := Point'
-           ( M.X +
-               (1.0 / 2.0)*(Cos (225.0 + 90.0, Base)*(L.X - M.X) -
-                              Sin(225.0 + 90.0,Base)*(L.Y - M.Y)),
-             M.Y +
-               (1.0 / 2.0)*((L.X - M.X)*Sin (225.0 + 90.0, Base) +
-                              (L.Y - M.Y)*Cos(225.0 + 90.0,Base)) );
-
+         A.PDC.Trig(1) := Calcul_PDC (45.0, (1.0 / 2.0));
+         A.PDC.Trig(2) := Calcul_PDC (225.0, (1.0 / 2.0));
+         A.PDC.Inv(1) := Calcul_PDC (45.0 + 90.0, (1.0 / 2.0));
+         A.PDC.Inv(2) := Calcul_PDC (225.0 + 90.0, (1.0 / 2.0));
+	 
       end Generer_Croix;
 
       procedure Calculer_Longueur (A : in out Arrete) is
