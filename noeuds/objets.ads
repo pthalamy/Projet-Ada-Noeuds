@@ -20,9 +20,8 @@ package Objets is
       Y : Float;
    end record;
 
-   type Tab_Points is array('T'..'I') of Point;
    type PtsDeCtrl is record
-      SPt1, SPt2 : Tab_Points;
+      Inv, Trig : Point;
    end record;
 
    type Sommet is record
@@ -32,15 +31,15 @@ package Objets is
    end record;
 
    type Arrete is record
-      S1, S2 : Indice;
-      PDC : PtsDeCtrl;
+      MyPDC, AutresPDC : PtsDeCtrl; -- Autres Utiles seulement pour le tracé
+      Noeud_Trace : Boolean;
       Longueur : Float;
       Milieu : Point;
    end record;
    type PtrArrete is access Arrete;
 
    type Cellule is record
-      I : Indice;
+      Ind : Indice;
       A : PtrArrete;
       Suiv : Pointeur;
    end record;
@@ -53,6 +52,8 @@ package Objets is
    X_Min, Y_Min : Float;
    Coeff_Marge: Float := 1.5;
 
+   
+   procedure Put (P : Point);
    procedure Put (S : Sommet);
    procedure Put (T : Tab_Sommets);
    procedure Put (A : Arrete);

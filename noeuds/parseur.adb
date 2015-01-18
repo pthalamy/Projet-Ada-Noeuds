@@ -67,6 +67,12 @@ package body Parseur is
          Put_Line (Standard_Error,
                    "Erreur: Erreur de lecture !");
          raise Erreur_Lecture;
+	 
+      when Nombre_Sommets_Nul =>
+	 Put_Line (Standard_Error, 
+		   "erreur parseur: Il n'y a aucun sommet.");
+	 raise Kn_Mal_Formate; 
+	 
    end Lecture_Nombre_Sommets;
 
    procedure Lecture (Nom_Fichier : in String;
@@ -77,7 +83,7 @@ package body Parseur is
       procedure Init_Sommet (I: Indice) is
          Nb_Arretes : Natural;
          Indice_Courant : Indice;
-         Arrete_Courante : Arrete;
+         Arrete_Courante : PtrArrete;
       begin
          T(I).Voisins.Tete := null;
          T(I).Voisins.Queue := null;
@@ -95,15 +101,28 @@ package body Parseur is
 
          ---- Nombre d'arrètes voisines
          Get (Fichier_Kn, Nb_Arretes);
+	 
+	 if Nb_Arretes = 0 then
+	    raise Nombre_Voisins_Nul;
+	 end if;      
+	 
          ---- Récuperation des indices des sommets voisins et stockage
          ---- dans une pile/liste.
          for V in 1..Nb_Arretes loop
             Get (Fichier_Kn, Natural (Indice_Courant));
-            Arrete_Courante := Arrete'(S1 => I, S2 => Indice_Courant,
-                                       Longueur => 0.0,
-                                       Milieu => (others => 0.0));
+            Arrete_Courante := new Arrete'(Longueur => 0.0,
+					   Milieu => (others => 0.0),
+					   Noeud_Trace => False,
+					   others => (others => 
+							(others => 0.0)) );
             Enqueue (T(I).Voisins, Indice_Courant, Arrete_Courante);
          end loop;
+	 
+      exception
+	 when Nombre_Voisins_Nul =>
+	    Put_Line (Standard_Error, 
+		      "erreur parseur: Un voisin a un nombre de voisin nul.");
+	    raise Kn_Mal_Formate;
       end Init_Sommet;
 
    begin

@@ -10,15 +10,15 @@ package body Objets is
    begin
       return "(" & Float'Image (P.X) & ", " & Float'Image (P.Y) & " )";
    end Point2Str;
-
+   
+   procedure Put (P : Point) is
+   begin
+      Put_Line (Point2Str (P));
+   end Put;
+   
    procedure Put (S : Sommet) is
    begin
       Put_Line ("Position: " & Point2Str (S.Pos));
-      Put_Line ("Points de controle: ");
-      Put_Line ("  Sens Trigonométrique: ");
-      Put_Line (Point2Str (S.PDC.Trig));
-      Put_Line ("  Sens Inverse: ");
-      Put_Line (Point2Str (S.PDC.Inv));
 
       Put_Line ("Arretes adjacents: ");
       -- Affichage du contenu de la liste
@@ -35,12 +35,19 @@ package body Objets is
 
    procedure Put (A : Arrete) is
    begin
-      Put_Line ("  Arrete : [" & Integer'Image (Natural (A.S1)) & ","
-                  & Integer'Image (Natural (A.S2)) & " ]");
       Put_Line ("  Longueur: " & Float'Image (A.Longueur));
       Put_Line ("  Milieu: " & Point2Str(A.Milieu));
+      Put_Line ("Mes Points de controle: ");
+      Put_Line ("  Sens Trigonométrique: ");
+      Put_Line (Point2Str (A.MyPDC.Trig));
+      Put_Line ("  Sens Inverse: ");
+      Put_Line (Point2Str (A.MyPDC.Inv));      
+      Put_Line ("Points de controle d'en face: ");
+      Put_Line ("  Sens Trigonométrique: ");
+      Put_Line (Point2Str (A.AutresPDC.Trig));
+      Put_Line ("  Sens Inverse: ");
+      Put_Line (Point2Str (A.AutresPDC.Inv));      
+
    end Put;
-
-
 
 end Objets;

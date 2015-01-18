@@ -9,6 +9,8 @@ use Objets, Liste;
 
 package body Svg is
 
+   Fichier_Svg : File_Type;
+   
    type Color is (Violet, Indigo, Bleu, Vert, Jaune, Orange, Rouge, Noir, Blanc);
 
    function Code_Couleur (C : Color) return String is
@@ -25,30 +27,8 @@ package body Svg is
          when Blanc => return "rgb(255,255,255)";
       end case;
    end Code_Couleur;
-
-   procedure Sauvegarde (Nom_Fichier_Svg : in String;
-                         T : in out Tab_Sommets)
-   is
-      Fichier_Svg : File_Type;
-
-      -- ! A appeler avant toute ecriture dans le fichier svg !
-      -- garantit : Insere le header svg dans le fichiersvg.
-      procedure Svg_Header is
-      begin
-         Put (Fichier_Svg, "<svg width=""");
-         Put (Fichier_Svg, Image.Largeur);
-         Put (Fichier_Svg, """ height=""");
-         Put (Fichier_Svg, Image.Hauteur);
-         Put_Line (Fichier_Svg, """>");
-      end Svg_Header;
-
-      -- ! A appeler pour clore le fichier svg !
-      -- garantit : Insere le footer svg dans le fichier svg.
-      procedure Svg_Footer is
-      begin
-         Put_Line (Fichier_Svg, "</svg>");
-      end Svg_Footer;
-
+   
+   procedure Trace_Intermediaire (T : in out Tab_Sommets) is
       -- Dessine une ligne A -- B
       procedure Svg_Line (A, B : Point)
       is
@@ -65,37 +45,202 @@ package body Svg is
 
          Put (Fichier_Svg, Code_Couleur (Noir));
 
-         Put_Line (Fichier_Svg, ";stroke-width:0.02""/>");
+         Put_Line (Fichier_Svg, ";stroke-width:0.1""/>");
       end Svg_Line;
 
       -- TODO : Tracer croix
       procedure Trace_Croix (A : Arrete) is
       begin
-         Svg_Line (T(A.S1).PDC.Trig, T(A.S2).PDC.Trig);
-         Svg_Line (T(A.S1).PDC.Inv, T(A.S2).PDC.Inv);
-      end Trace_Croix;
-
-      procedure Trace_Arrete (A : Arrete) is
+         Svg_Line (A.MyPDC.Trig, A.AutresPDC.Trig);
+         Svg_Line (A.MyPDC.Inv, A.AutresPDC.Inv);
+      end Trace_Croix;      
+      
+      Cour : Pointeur;      
+   begin
+      for I in T'Range loop
+         Cour := T(I).Voisins.Tete;
+         while Cour /= null loop
+	    Svg_Line (T(I).Pos, T(Cour.Ind).Pos); -- Trace l'arrete
+            Trace_Croix (Cour.A.all);
+            Cour := Cour.Suiv;
+         end loop;
+      end loop;      
+   end Trace_Intermediaire;
+   
+   procedure Trace_Noeuds (T : in out Tab_Sommets) is 
+      
+      procedure Svg_Curve (D, A, C1, C2 : Point) is
+	 
+	 function Pt2Svg (P : Point) return String is
+	 begin
+	    return Float'Image (P.X) & Float'Image (P.Y);
+	 end Pt2Svg;
+	 
       begin
-         Svg_Line (T(A.S1).Pos, T(A.S2).Pos);
-      end Trace_Arrete;
-
+	 Put_Line (Fichier_Svg, "<path d=""M" & Pt2Svg (D)
+		     & "C" & Pt2Svg (C1) & Pt2Svg (C2)
+		     & Pt2Svg (A));
+	 Put (Fichier_Svg, """ style=""stroke:");
+         Put (Fichier_Svg, Code_Couleur (Rouge));
+         Put_Line (Fichier_Svg, ";stroke-width:0.1; fill: none""/>");
+      end Svg_Curve;
+      
+      Depart : Indice; -- Sommet de depart du tracé
+      SCour, SCand, SCible : Indice;
+      ArreteCour, ArreteCible : Arrete;
+      AngleMax, AngleCour : Float;
+      Trig : Boolean;
       Cour : Pointeur;
+      
+      procedure Trouve_Cible is
+	 
+	 procedure Recupere_ArreteCible is
+	    Local_Cour : Pointeur := T(SCible).Voisins.Tete;
+	 begin
+	    while Local_Cour /= null loop
+	       if Local_Cour.Ind = SCour then
+		  ArreteCible := Local_Cour.A.all;
+		  return;
+	       end if;
+	       Local_Cour := Local_Cour.Suiv;
+	    end loop;
+	 end Recupere_ArreteCible;
+	 
+	 --  function Calcul_Angle (SCour, SOpp, SCand : Point) return Float is
+	 --     Angle : Float;
+	 --     LScour_Sopp :Float;
+	 --     LSOpp_Scand:Float;
+	 --     LScand_Scour:Float;
+	 --     Base : constant Float := 360.0;
+	 --  begin
+	 
+	 --     LScour_Sopp := sqrt((SCour.X-SOpp.X)**2 + (SCand.X-SOpp.X)**2);	    
+	 --     LSopp_Scand := sqrt((SOpp.X-SCand.X)**2 + (SOpp.Y-SCand.Y)**2);	    
+	 --     LScand_Scour := sqrt((Scour.X-SCand.X)**2 + (Scour.Y-Scand.Y)**2);
+	 
+	 --     Angle := Arccos((LScour_Sopp**2 + LSopp_Scand**2 - LScand_Scour**2) /     
+	 --  		      (2.0*LSopp_Scand*LScour_Sopp) , Base);
+	 
+	 --     return Angle;
+	 
+	 --  end Calcul_Angle;	    
+
+	 
+	 function Calcul_Angle (SCour, SOpp, SCand : Point) return Float is
+	    Angle : Float;
+	 begin
+	    Put_Line ("======");
+	    Put ("SCour"); Put (SCour);
+	    Put ("SOpp"); Put (SOpp);
+	    Put ("SCand"); Put (SCand);
+	    Put_Line ("======");
+	    
+	    Angle := Arccos(((SCour.X-SOpp.X)*(SCand.X-SOpp.X) +		       
+	 		       (Scour.Y-SOpp.Y)*(SCand.Y-SOpp.Y)) /		        
+	 		      (sqrt((SCour.X-SCand.X)**2+(SCour.Y-SCand.Y)**2) * 
+	 			 sqrt((SOpp.X-SCand.X)**2+(SOpp.Y-SCand.Y)**2)), 360.0);
+	    return Angle;	    
+	 end Calcul_Angle;
+	 
+      begin 
+	 while Cour /= null loop
+	    SCand := Cour.Ind;
+	    AngleCour := Calcul_Angle (T(SCour).Pos, 
+				       ArreteCour.Milieu, 
+				       T(SCand).Pos);
+	    if AngleCour > AngleMax 
+	      and then not Cour.A.Noeud_Trace then
+	       Put_Line ("AngleCour: " & Float'Image (AngleCour)
+			   & " > AngleMax: " & Float'Image (AngleMax));
+	       AngleMax := AngleCour;
+	       SCible := SCand;
+	    else
+	       Put_Line ("AngleCour: " & Float'Image (AngleCour)
+			   & " < AngleMax: " & Float'Image (AngleMax));
+
+	    end if;
+	    
+	    Cour := Cour.Suiv;
+	 end loop;
+	 
+	 Recupere_ArreteCible; 
+      end Trouve_Cible;
+      
+      procedure Trace_Bezier is	 
+      begin
+	 if Trig then
+	    Svg_Curve (ArreteCour.Milieu, ArreteCible.Milieu, 
+		       ArreteCour.MyPDC.Trig, ArreteCible.MyPDC.Inv);
+	 else
+	    Svg_Curve (ArreteCour.Milieu, ArreteCible.Milieu, 
+		       ArreteCour.MyPDC.Inv, ArreteCible.MyPDC.Trig);	 
+	 end if;
+	 	 
+	 Trig := not Trig;
+      end Trace_Bezier;
+      
+      Count : Natural := 0;
+   begin    
+      -- Initialisation
+      Depart := T'First; -- On part toujours du premier element
+      Put_Line ("Départ: " & Integer'Image (Integer(Depart)));
+      SCour := Depart;      
+      ArreteCour := T(SCour).Voisins.Tete.A.all;
+      
+      Trig := True; -- On part dans le sens trigo
+      
+      loop 	 
+	 AngleMax := 0.0;	 
+	 Put_Line ("SCour: " & Integer'Image (Integer(SCour)));
+	 Cour := T(SCour).Voisins.Tete;
+	 
+	 Trouve_Cible;
+	 Trace_Bezier;
+	 
+	 Put_Line ("SCible: " & Integer'Image (Integer(SCible)));
+	 SCour := SCible;
+	 
+	 ArreteCour.Noeud_Trace := True;
+	 ArreteCible.Noeud_Trace := True;
+
+	 ArreteCour := ArreteCible;
+	 
+	 Count := Count + 1;
+	 -- Si on retombe sur le point de départ, le tracé est terminé      
+	 --  exit when SCour = Depart;
+	 exit when Count = 7; New_Line;
+      end loop;
+      
+   end Trace_Noeuds;
+   
+   procedure Sauvegarde (Nom_Fichier_Svg : in String;
+                         T : in out Tab_Sommets)
+   is
+
+      procedure Svg_Header is
+      begin
+         Put (Fichier_Svg, "<svg width=""");
+         Put (Fichier_Svg, Image.Largeur);
+         Put (Fichier_Svg, """ height=""");
+         Put (Fichier_Svg, Image.Hauteur);
+         Put_Line (Fichier_Svg, """>");
+      end Svg_Header;
+
+      procedure Svg_Footer is
+      begin
+         Put_Line (Fichier_Svg, "</svg>");
+      end Svg_Footer;
+
    begin
       Create (File => Fichier_Svg,
               Mode => Out_File,
               Name => Nom_Fichier_Svg);
 
       Svg_Header;
-
-      for I in T'Range loop
-         Cour := T(I).Voisins.Tete;
-         while Cour /= null loop
-            Trace_Arrete (Cour.A);
-            Trace_Croix (Cour.A);
-            Cour := Cour.Suiv;
-         end loop;
-      end loop;
+      
+      Trace_Intermediaire (T);
+      Trace_Noeuds (T);
+      
       Svg_Footer;
 
       Close (Fichier_Svg);
