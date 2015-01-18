@@ -2,15 +2,15 @@ with Objets;
 use Objets;
 
 package Svg is
-   
-   type Image is record
+
+   type GrilleSVG is record
       Largeur : Float;
       Hauteur : Float;
    end record;
-   
-   Affichage : Image;
-   Marge_Affichage : constant Float := 10.0;
-   
+
+   Image : GrilleSVG;
+
    procedure Sauvegarde (Nom_Fichier_Svg : in String;
-                         T : in out Tab_Sommets);
+                         T : in out Tab_Sommets;
+                         L : in out Liste_Arretes);
 end Svg;

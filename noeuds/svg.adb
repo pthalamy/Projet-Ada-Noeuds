@@ -4,12 +4,12 @@ with Ada.Numerics.Elementary_Functions;
 use Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO;
 use Ada.Numerics.Elementary_Functions;
 
-with Objets, Pile;
-use Objets, Pile;
+with Objets, Liste;
+use Objets, Liste;
 
 package body Svg is
-   
-   type Color is (Violet, Indigo, Bleu, Vert, Jaune, Orange, Rouge, Noir, Blanc);  
+
+   type Color is (Violet, Indigo, Bleu, Vert, Jaune, Orange, Rouge, Noir, Blanc);
 
    function Code_Couleur (C : Color) return String is
    begin
@@ -25,65 +25,58 @@ package body Svg is
          when Blanc => return "rgb(255,255,255)";
       end case;
    end Code_Couleur;
-   
-   function Hypotenuse (A, B : Float) return Float is
-   begin
-      return sqrt(A**2 + B**2);
-   end Hypotenuse;
-   
+
    procedure Sauvegarde (Nom_Fichier_Svg : in String;
-                         T : in out Tab_Sommets)
+                         T : in out Tab_Sommets;
+                         L : in out Liste_Arretes)
    is
       Fichier_Svg : File_Type;
-      
+
       -- ! A appeler avant toute ecriture dans le fichier svg !
       -- garantit : Insere le header svg dans le fichiersvg.
       procedure Svg_Header is
       begin
-	 Put (Fichier_Svg, "<svg width=""");
-	 --  Put (Fichier_Svg, Affichage.Largeur);
-	 Put (Fichier_Svg, "100");
-	 Put (Fichier_Svg, """ height=""");
-	 --  Put (Fichier_Svg, Affichage.Hauteur);
-	 Put (Fichier_Svg, "100");
-	 Put_Line (Fichier_Svg, """>");
+         Put (Fichier_Svg, "<svg width=""");
+         Put (Fichier_Svg, Image.Largeur);
+         Put (Fichier_Svg, """ height=""");
+         Put (Fichier_Svg, Image.Hauteur);
+         Put_Line (Fichier_Svg, """>");
       end Svg_Header;
 
       -- ! A appeler pour clore le fichier svg !
       -- garantit : Insere le footer svg dans le fichier svg.
       procedure Svg_Footer is
       begin
-	 Put_Line (Fichier_Svg, "</svg>");
+         Put_Line (Fichier_Svg, "</svg>");
       end Svg_Footer;
-      
+
       -- Dessine une ligne A -- B
       procedure Svg_Line (A, B : Point)
       is
       begin
-	 Put (Fichier_Svg, "<line x1=""");
-	 Put (Fichier_Svg, A.X);
-	 Put (Fichier_Svg, """ y1=""");
-	 Put (Fichier_Svg, A.Y);
-	 Put (Fichier_Svg, """ x2=""");
-	 Put (Fichier_Svg, B.X);
-	 Put (Fichier_Svg, """ y2=""");
-	 Put (Fichier_Svg, B.Y);
-	 Put (Fichier_Svg, """ style=""stroke:");
+         Put (Fichier_Svg, "<line x1=""");
+         Put (Fichier_Svg, A.X);
+         Put (Fichier_Svg, """ y1=""");
+         Put (Fichier_Svg, A.Y);
+         Put (Fichier_Svg, """ x2=""");
+         Put (Fichier_Svg, B.X);
+         Put (Fichier_Svg, """ y2=""");
+         Put (Fichier_Svg, B.Y);
+         Put (Fichier_Svg, """ style=""stroke:");
 
-	 Put (Fichier_Svg, Code_Couleur (Noir));
+         Put (Fichier_Svg, Code_Couleur (Noir));
 
-	 Put_Line (Fichier_Svg, ";stroke-width:0.02""/>");
+         Put_Line (Fichier_Svg, ";stroke-width:0.02""/>");
       end Svg_Line;
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> NewDataStruct
       -- TODO : Tracer croix
-      procedure Trace_Croix (L, R : Point)is
-      	 LR : Float; -- Longueur du segment L-R
-      	 DX, DY : Float; -- Différentiels en X et Y
-      	 Milieu : Point; -- Milieu du segment
-	 A, B, C, D : Point; -- extrémités des segments de croix
-	 Alpha : Float; -- Angle ^LR
-	 Base : constant Float := 360.0; -- Nous utilisons des degrés
+      procedure Trace_Croix (A : Arrete) is
       begin
+<<<<<<< HEAD
       	 DX := abs (R.X - L.X);
       	 DY := abs (R.Y - L.Y);
       	 LR := Hypotenuse (DX, DY);
@@ -159,11 +152,35 @@ package body Svg is
 	    -- Elimination de la redondance dans la pile du voisin
 	    Pop (T(V).Voisins, V); -- V sert de "poubelle"
 	 end loop;
+=======
+         Svg_Line (A.PDC.Trig(1), A.PDC.Trig(2));
+         Svg_Line (A.PDC.Inv(1), A.PDC.Inv(2));
+      end Trace_Croix;
+
+      procedure Trace_Arrete (A : Arrete) is
+      begin
+         Svg_Line (T(A.S1).Pos, T(A.S2).Pos);
+      end Trace_Arrete;
+
+      Cour : PointeurA := L.Tete;
+   begin
+      Create (File => Fichier_Svg,
+              Mode => Out_File,
+              Name => Nom_Fichier_Svg);
+
+      Svg_Header;
+
+
+      while Cour /= null loop
+         Trace_Arrete (Cour.Val);
+         Trace_Croix (Cour.Val);
+         Cour := Cour.Suiv;
+>>>>>>> NewDataStruct
       end loop;
-      
-      Svg_Footer;      
-      
-      Close (Fichier_Svg);            
+
+      Svg_Footer;
+
+      Close (Fichier_Svg);
    end Sauvegarde;
-   
+
 end Svg;

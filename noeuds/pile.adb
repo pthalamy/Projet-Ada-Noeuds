@@ -8,7 +8,7 @@ package body Pile is
    
    procedure Push (Tete : in out Pile_Sommets; I : in Indice) is
    begin                 
-      Tete := new Cellule'(I, Tete);
+      Tete := new CelluleS'(I, Tete);
       
       if Tete = null then
 	 raise Memoire_Pleine;	 
@@ -22,12 +22,12 @@ package body Pile is
    --     while Cour /= null loop
    --  	 Cour := Cour.Suiv;
    --     end loop;        
-      
+   
    --     Push (Cour, I)            
    --  end Push;
    
    procedure Pop (Tete : in out Pile_Sommets; I : out Indice) is
-      procedure Free is new Ada.Unchecked_Deallocation(Cellule, Pile_Sommets);
+      procedure Free is new Ada.Unchecked_Deallocation(CelluleS, Pile_Sommets);
       Temp : Pile_Sommets := Tete;
    begin
       if Temp = null then
@@ -43,6 +43,15 @@ package body Pile is
 	 Put_Line ("Pile_Vide: Impossible de dépiler, la pile est vide.");
    end Pop;
    
+   function Vide (Tete : in Pile_Sommets) return Boolean is 
+   begin 
+      if Tete = null then
+	 return True;
+      else 
+	 return False;
+      end if;
+   end Vide;
+   
    procedure Put (Tete : in Pile_Sommets) is 
       Cour : Pile_Sommets;
    begin
@@ -53,7 +62,6 @@ package body Pile is
       Cour := Tete;
       
       while Cour /= null loop
-	 New_Line;
 	 Put (Natural (Cour.Val));
 	 Cour := Cour.Suiv;
 	 New_Line;
@@ -62,15 +70,6 @@ package body Pile is
    exception
       when Pile_Vide =>
 	 Put_Line ("Pile_Vide: Affichage impossible, la pile est vide.");	 
-   end Put;    
-    
-   function Vide (Tete : in Pile_Sommets) return Boolean is 
-   begin 
-      if Tete = null then
-	 return True;
-      else 
-	 return False;
-      end if;
-   end Vide;
+   end Put;       
    
 end Pile;

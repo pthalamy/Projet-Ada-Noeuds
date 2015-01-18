@@ -1,14 +1,9 @@
 with Ada.Text_IO, Ada.Command_Line;
 use Ada.Text_IO, Ada.Command_Line;
 
-with Objets, Svg, Pile, Parseur;
-use Objets, Pile;
+with Objets, Svg, Liste, Parseur, Traitement;
+use Objets, Liste;
 
--- Idée: Remplacer la liste par un tableau contenant les sommets rangés par indice
--- +> Accés plus simple aux coordonnées.
-
--- NOTE: Pile implémentée. 
--- TODO: Implementation du tableau et supplantation de la liste.
 procedure Noeuds is
    Nb_Sommets : Indice;
 begin
@@ -17,19 +12,24 @@ begin
       Put_Line(Standard_Error, "utilisation : noeuds data.kn out.svg");
       return;
    end if;
-   
+
    Parseur.Lecture_Nombre_Sommets (Argument(1), Nb_Sommets);
+
    Put_Line ("Nombre de sommets: " & Integer'Image(Integer (Nb_Sommets)));
-   
+
    declare
-      Sommets : Tab_Sommets(1..Nb_Sommets);
+      Sommets : Tab_Sommets (1..Nb_Sommets);
+      Arretes : Liste_Arretes := (null, null);
    begin
-      Parseur.Lecture(Sommets);
+      Parseur.Lecture (Argument(1), Sommets);
       Put (Sommets);
-      
+
       -- Traitement ?
-      
-      Svg.Sauvegarde(Argument(2), Sommets);
+      Traitement.Generer_Arretes (Sommets, Arretes);
+      Traitement.Calculer_Points_De_Controle (Sommets, Arretes);
+      Put (Arretes);
+
+      Svg.Sauvegarde(Argument(2), Sommets, Arretes);
    end;
 
 end Noeuds;
