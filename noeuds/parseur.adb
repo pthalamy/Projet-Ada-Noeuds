@@ -110,9 +110,10 @@ package body Parseur is
          ---- dans une pile/liste.
          for V in 1..Nb_Arretes loop
             Get (Fichier_Kn, Natural (Indice_Courant));
-            Arrete_Courante := new Arrete'(Longueur => 0.0,
+            Arrete_Courante := new Arrete'(MonId => I,
+					   AutreID => Indice_Courant,
+					   Longueur => 0.0,
 					   Milieu => (others => 0.0),
-					   Noeud_Trace => False,
 					   others => (others => 
 							(others => 0.0)) );
             Enqueue (T(I).Voisins, Indice_Courant, Arrete_Courante);

@@ -31,8 +31,8 @@ package Objets is
    end record;
 
    type Arrete is record
+      MonId, AutreID : Indice;
       MyPDC, AutresPDC : PtsDeCtrl; -- Autres Utiles seulement pour le tracé
-      Noeud_Trace : Boolean;
       Longueur : Float;
       Milieu : Point;
    end record;
@@ -51,7 +51,6 @@ package Objets is
    X_Max, Y_Max : Float;
    X_Min, Y_Min : Float;
    Coeff_Marge: Float := 1.5;
-
    
    procedure Put (P : Point);
    procedure Put (S : Sommet);

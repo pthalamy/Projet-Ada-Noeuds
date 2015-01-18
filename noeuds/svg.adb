@@ -86,7 +86,7 @@ package body Svg is
       end Svg_Curve;
       
       Depart : Indice; -- Sommet de depart du tracé
-      SCour, SCand, SCible : Indice;
+      SCour, SOpp, SCand, SCible : Indice;
       ArreteCour, ArreteCible : Arrete;
       AngleMax, AngleCour : Float;
       Trig : Boolean;
@@ -105,59 +105,46 @@ package body Svg is
 	       Local_Cour := Local_Cour.Suiv;
 	    end loop;
 	 end Recupere_ArreteCible;
-	 
-	 --  function Calcul_Angle (SCour, SOpp, SCand : Point) return Float is
-	 --     Angle : Float;
-	 --     LScour_Sopp :Float;
-	 --     LSOpp_Scand:Float;
-	 --     LScand_Scour:Float;
-	 --     Base : constant Float := 360.0;
-	 --  begin
-	 
-	 --     LScour_Sopp := sqrt((SCour.X-SOpp.X)**2 + (SCand.X-SOpp.X)**2);	    
-	 --     LSopp_Scand := sqrt((SOpp.X-SCand.X)**2 + (SOpp.Y-SCand.Y)**2);	    
-	 --     LScand_Scour := sqrt((Scour.X-SCand.X)**2 + (Scour.Y-Scand.Y)**2);
-	 
-	 --     Angle := Arccos((LScour_Sopp**2 + LSopp_Scand**2 - LScand_Scour**2) /     
-	 --  		      (2.0*LSopp_Scand*LScour_Sopp) , Base);
-	 
-	 --     return Angle;
-	 
-	 --  end Calcul_Angle;	    
-
-	 
+	 	 
 	 function Calcul_Angle (SCour, SOpp, SCand : Point) return Float is
-	    Angle : Float;
-	 begin
-	    Put_Line ("======");
-	    Put ("SCour"); Put (SCour);
-	    Put ("SOpp"); Put (SOpp);
-	    Put ("SCand"); Put (SCand);
-	    Put_Line ("======");
 	    
-	    Angle := Arccos(((SCour.X-SOpp.X)*(SCand.X-SOpp.X) +		       
-	 		       (Scour.Y-SOpp.Y)*(SCand.Y-SOpp.Y)) /		        
-	 		      (sqrt((SCour.X-SCand.X)**2+(SCour.Y-SCand.Y)**2) * 
-	 			 sqrt((SOpp.X-SCand.X)**2+(SOpp.Y-SCand.Y)**2)), 360.0);
-	    return Angle;	    
+	    Angle : Float;
+	    LScour_Sopp :Float;
+	    LSOpp_Scand:Float;
+	    LScand_Scour:Float;
+	    Base : constant Float := 360.0;
+	    Interm : Float;
+	 begin
+	    
+	    LScour_Sopp := sqrt((SCour.X-SOpp.X)**2 + (SCand.Y-SOpp.Y)**2);
+	    
+	    LSopp_Scand := sqrt((SOpp.X-SCand.X)**2 + (SOpp.Y-SCand.Y)**2);
+	    
+	    LScand_Scour := sqrt((Scour.X-SCand.X)**2 + (Scour.Y-Scand.Y)**2);   
+	    
+	    Interm := ((SCour.X-SOpp.X)*(SCand.X-SOpp.X) +
+			 (Scour.Y-SOpp.Y)*(SCand.Y-SOpp.Y)) /
+	      (LScour_Sopp*LSopp_Scand);
+	    
+	    Angle := Arccos(Interm , Base);
+	    
+	    return Angle;
 	 end Calcul_Angle;
 	 
       begin 
 	 while Cour /= null loop
 	    SCand := Cour.Ind;
-	    AngleCour := Calcul_Angle (T(SCour).Pos, 
-				       ArreteCour.Milieu, 
-				       T(SCand).Pos);
-	    if AngleCour > AngleMax 
-	      and then not Cour.A.Noeud_Trace then
-	       Put_Line ("AngleCour: " & Float'Image (AngleCour)
-			   & " > AngleMax: " & Float'Image (AngleMax));
-	       AngleMax := AngleCour;
-	       SCible := SCand;
-	    else
-	       Put_Line ("AngleCour: " & Float'Image (AngleCour)
-			   & " < AngleMax: " & Float'Image (AngleMax));
-
+	    
+	    if SCand /= SOpp then
+	       AngleCour := Calcul_Angle (T(SCour).Pos, 
+					  T(SOpp).Pos, 
+					  T(SCand).Pos);
+	       if AngleCour > AngleMax then
+		  Put_Line ("AngleCour: " & Float'Image (AngleCour)
+			      & " > AngleMax: " & Float'Image (AngleMax));
+		  AngleMax := AngleCour;
+		  SCible := SCand;	       
+	       end if;
 	    end if;
 	    
 	    Cour := Cour.Suiv;
@@ -171,12 +158,12 @@ package body Svg is
 	 if Trig then
 	    Svg_Curve (ArreteCour.Milieu, ArreteCible.Milieu, 
 		       ArreteCour.MyPDC.Trig, ArreteCible.MyPDC.Inv);
+	    Trig := False;
 	 else
 	    Svg_Curve (ArreteCour.Milieu, ArreteCible.Milieu, 
 		       ArreteCour.MyPDC.Inv, ArreteCible.MyPDC.Trig);	 
+	    Trig := True;
 	 end if;
-	 	 
-	 Trig := not Trig;
       end Trace_Bezier;
       
       Count : Natural := 0;
@@ -187,10 +174,11 @@ package body Svg is
       SCour := Depart;      
       ArreteCour := T(SCour).Voisins.Tete.A.all;
       
-      Trig := True; -- On part dans le sens trigo
+      Trig := False; -- On part dans le sens Trigo
       
       loop 	 
-	 AngleMax := 0.0;	 
+	 AngleMax := 0.0;
+	 SOpp := ArreteCour.AutreID;
 	 Put_Line ("SCour: " & Integer'Image (Integer(SCour)));
 	 Cour := T(SCour).Voisins.Tete;
 	 
@@ -198,17 +186,14 @@ package body Svg is
 	 Trace_Bezier;
 	 
 	 Put_Line ("SCible: " & Integer'Image (Integer(SCible)));
+	 	 
 	 SCour := SCible;
-	 
-	 ArreteCour.Noeud_Trace := True;
-	 ArreteCible.Noeud_Trace := True;
-
 	 ArreteCour := ArreteCible;
 	 
 	 Count := Count + 1;
 	 -- Si on retombe sur le point de départ, le tracé est terminé      
 	 --  exit when SCour = Depart;
-	 exit when Count = 7; New_Line;
+	 exit when Count = 1; New_Line;
       end loop;
       
    end Trace_Noeuds;
