@@ -68,91 +68,10 @@ package body Svg is
 
          Put_Line (Fichier_Svg, ";stroke-width:0.02""/>");
       end Svg_Line;
-<<<<<<< HEAD
-      
-=======
 
->>>>>>> NewDataStruct
       -- TODO : Tracer croix
       procedure Trace_Croix (A : Arrete) is
       begin
-<<<<<<< HEAD
-      	 DX := abs (R.X - L.X);
-      	 DY := abs (R.Y - L.Y);
-      	 LR := Hypotenuse (DX, DY);
-	 
-	 if R.X > L.X then 
-	    Alpha := Arcsin (DY / LR, Base);
-	 else 
-	    Alpha := 360.0 - Arcsin (DY / LR, Base);
-	 end if;
-
-	 New_Line; 
-	 Put (LR); New_Line; 
-	 Put (Alpha); New_Line;
-	 
-	 Put_Line ("L.X=" & Float'Image(L.X)
-		     & " L.Y=" & Float'Image(L.Y));
-	 
-	 Put_Line ("R.X=" & Float'Image(R.X)
-		     & " R.Y=" & Float'Image(R.Y));
-	 
-      	 Milieu.X := L.X + ((R.X - (L.X)) / 2.0);
-      	 Milieu.Y := L.Y + ((R.Y - (L.Y)) / 2.0);
-	 
-	 Put_Line ("Milieu.X=" & Float'Image(Milieu.X)
-		     & " Milieu.Y=" & Float'Image(Milieu.Y));
-	 
-	 A := Point'( Milieu.X + (1.0/4.0)*(Cos (45.0, Base)*(L.X-Milieu.X)-Sin(45.0,Base)*(L.Y-Milieu.Y)), 
-		      Milieu.Y + (1.0/4.0)*((L.X-Milieu.X)*Sin (45.0, Base)+(L.Y-Milieu.Y)*Cos(45.0,Base)));
-	 B := Point'( Milieu.X + (1.0/4.0)*(Cos (225.0, Base)*(L.X-Milieu.X)-Sin(225.0,Base)*(L.Y-Milieu.Y)), 
-		      Milieu.Y + (1.0/4.0)*((L.X-Milieu.X)*Sin (225.0, Base)+(L.Y-Milieu.Y)*Cos(225.0,Base)));
-	 Svg_Line(A,B);
-	 
-	 
-	 C:= Point'( Milieu.X + (1.0/4.0)*(Cos (45.0+90.0, Base)*(L.X-Milieu.X)-Sin(45.0+90.0,Base)*(L.Y-Milieu.Y)), 
-		     Milieu.Y + (1.0/4.0)*((L.X-Milieu.X)*Sin (45.0+90.0, Base)+(L.Y-Milieu.Y)*Cos(45.0+90.0,Base)));
-	 D := Point'( Milieu.X + (1.0/4.0)*(Cos (225.0+90.0, Base)*(L.X-Milieu.X)-Sin(225.0+90.0,Base)*(L.Y-Milieu.Y)), 
-		      Milieu.Y + (1.0/4.0)*((L.X-Milieu.X)*Sin (225.0+90.0, Base)+(L.Y-Milieu.Y)*Cos(225.0+90.0,Base)));
-	 Svg_Line(C,D);
-	 
-	 --  A := Point'( Milieu.X + (Cos (Alpha + 45.0, Base))*(LR / 4.0), 
-	 --  	      Milieu.Y + (Sin (Alpha + 45.0, Base))*(LR / 4.0) );
-	 --  B := Point'( Milieu.X + (Cos (Alpha + 225.0, Base))*(LR / 4.0), 
-	 --  	      Milieu.Y + (Sin (Alpha + 225.0, Base))*(LR / 4.0) );
-	 --  Svg_Line (A, B);
-	 --  C := Point'( Milieu.X + (Cos (Alpha + 135.0, Base))*(LR / 4.0), 
-	 --  	      Milieu.Y + (Sin (Alpha + 135.0, Base))*(LR / 4.0) );
-	 --  D := Point'( Milieu.X + (Cos (Alpha + 315.0, Base))*(LR / 4.0),
-	 --  	      Milieu.Y + (Sin (Alpha + 315.0, Base))*(LR / 4.0) );
-	 --  Svg_Line (C, D);
-	 
-      end Trace_Croix;
-      
-      V : Indice;
-   begin
-      Create (File => Fichier_Svg,
-	      Mode => Out_File,
-	      Name => Nom_Fichier_Svg);
-      
-      Svg_Header;      
-      
-      
-      -- Tracé pour chaque couple d'indice
-      for I in reverse T'Range loop
-	 -- Tant que la pile du sommet courant n'est pas vide, 
-	 -- tracé est mis a jour des piles
-	 while not Vide (T(I).Voisins) loop
-	    -- Recuperation de l'indice du voisin
-	    Pop (T(I).Voisins, V);
-	    -- Tracé du segment
-	    Svg_Line (T(I).Pos, T(V).Pos);
-	    -- TODO: Puis de la croix
-	    Trace_Croix (T(I).Pos, T(V).Pos);
-	    -- Elimination de la redondance dans la pile du voisin
-	    Pop (T(V).Voisins, V); -- V sert de "poubelle"
-	 end loop;
-=======
          Svg_Line (A.PDC.Trig(1), A.PDC.Trig(2));
          Svg_Line (A.PDC.Inv(1), A.PDC.Inv(2));
       end Trace_Croix;
@@ -175,7 +94,6 @@ package body Svg is
          Trace_Arrete (Cour.Val);
          Trace_Croix (Cour.Val);
          Cour := Cour.Suiv;
->>>>>>> NewDataStruct
       end loop;
 
       Svg_Footer;
