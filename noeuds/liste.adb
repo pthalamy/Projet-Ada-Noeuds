@@ -6,23 +6,26 @@ use Objets;
 
 package body Liste is
 
-   procedure Enqueue (L : in out Liste_Arretes; A : in Arrete) is
+   procedure Enqueue (L : in out Liste_Voisins;
+                      I : in Indice;
+                      A : in Arrete)
+   is
    begin
       if L.Tete = null then
          raise Liste_Vide;
       end if;
 
-      L.Queue.Suiv := new CelluleA'(A, null);
+      L.Queue.Suiv := new Cellule'(I, A, null);
       L.Queue := L.Queue.Suiv;
 
    exception
       when Liste_Vide =>
-         L.Tete := new CelluleA'(A, null);
+         L.Tete := new Cellule'(I, A, null);
          L.Queue := L.Tete;
    end Enqueue;
 
-   procedure Put (L : in Liste_Arretes) is
-      Cour : PointeurA;
+   procedure Put (L : in Liste_Voisins) is
+      Cour : Pointeur;
    begin
       if L.Tete = null then
          raise Liste_Vide;
@@ -31,7 +34,10 @@ package body Liste is
       Cour := L.Tete;
 
       while Cour /= null loop
-         Put (Cour.Val);
+
+         Put_Line ("  Indice: " & Integer'Image (Integer (Cour.I)));
+         Put (Cour.A);
+         New_Line;
          Cour := Cour.Suiv;
       end loop;
 

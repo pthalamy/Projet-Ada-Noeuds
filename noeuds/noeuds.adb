@@ -19,17 +19,14 @@ begin
 
    declare
       Sommets : Tab_Sommets (1..Nb_Sommets);
-      Arretes : Liste_Arretes := (null, null);
    begin
       Parseur.Lecture (Argument(1), Sommets);
+
+      Traitement.Calculer_Points_De_Controle (Sommets);
+
+      Svg.Sauvegarde(Argument(2), Sommets);
+
       Put (Sommets);
-
-      -- Traitement ?
-      Traitement.Generer_Arretes (Sommets, Arretes);
-      Traitement.Calculer_Points_De_Controle (Sommets, Arretes);
-      Put (Arretes);
-
-      Svg.Sauvegarde(Argument(2), Sommets, Arretes);
    end;
 
 end Noeuds;

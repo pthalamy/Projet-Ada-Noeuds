@@ -6,54 +6,47 @@ package Objets is
    -- Types personnalisés
    type Indice is new Natural;
 
+   -- Types de gestion de liste
+   type Cellule;
+   type Pointeur is access Cellule;
+
+   type Liste_Voisins is record
+      Tete, Queue : Pointeur;
+   end record;
+
    -- Entités géométriques
    type Point is record
       X : Float;
       Y : Float;
    end record;
 
-   type CelluleS;
-   type Pile_Sommets is access CelluleS;
+   type Tab_Points is array('T'..'I') of Point;
+   type PtsDeCtrl is record
+      SPt1, SPt2 : Tab_Points;
+   end record;
 
    type Sommet is record
       Pos : Point; -- Position du sommet
-      Voisins : Pile_Sommets; -- Pointeur vers tableau d'indices
-                              -- des sommets adjacents
-   end record;
-
-   type Tab_Points is array (1..2) of Point;
-   type PtsDeCtrl is record
-      Trig, Inv : Tab_Points;
+      Voisins : Liste_Voisins; -- Pointeur vers tableau d'indices
+                               -- des sommets adjacents
    end record;
 
    type Arrete is record
       S1, S2 : Indice;
+      PDC : PtsDeCtrl;
       Longueur : Float;
       Milieu : Point;
-      PDC : PtsDeCtrl;
+   end record;
+   type PtrArrete is access Arrete;
+
+   type Cellule is record
+      I : Indice;
+      A : PtrArrete;
+      Suiv : Pointeur;
    end record;
 
    -- Types tabulaires
    type Tab_Sommets is array(Indice range <>) of Sommet;
-
-   -- Types de gestion de liste
-   type CelluleA;
-   type PointeurA is access CelluleA;
-
-   type Liste_Arretes is record
-      Tete, Queue : PointeurA;
-   end record;
-
-   type CelluleA is record
-      Val : Arrete;
-      Suiv : PointeurA;
-   end record;
-
-   -- Types de gestion de pile
-   type CelluleS is record
-      Val : Indice;
-      Suiv : Pile_Sommets;
-   end record;
 
    -- Types de gestion SVG
    X_Max, Y_Max : Float;

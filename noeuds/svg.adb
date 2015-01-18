@@ -27,8 +27,7 @@ package body Svg is
    end Code_Couleur;
 
    procedure Sauvegarde (Nom_Fichier_Svg : in String;
-                         T : in out Tab_Sommets;
-                         L : in out Liste_Arretes)
+                         T : in out Tab_Sommets)
    is
       Fichier_Svg : File_Type;
 
@@ -72,8 +71,8 @@ package body Svg is
       -- TODO : Tracer croix
       procedure Trace_Croix (A : Arrete) is
       begin
-         Svg_Line (A.PDC.Trig(1), A.PDC.Trig(2));
-         Svg_Line (A.PDC.Inv(1), A.PDC.Inv(2));
+         Svg_Line (T(A.S1).PDC.Trig, T(A.S2).PDC.Trig);
+         Svg_Line (T(A.S1).PDC.Inv, T(A.S2).PDC.Inv);
       end Trace_Croix;
 
       procedure Trace_Arrete (A : Arrete) is
@@ -81,7 +80,7 @@ package body Svg is
          Svg_Line (T(A.S1).Pos, T(A.S2).Pos);
       end Trace_Arrete;
 
-      Cour : PointeurA := L.Tete;
+      Cour : Pointeur;
    begin
       Create (File => Fichier_Svg,
               Mode => Out_File,
@@ -89,13 +88,14 @@ package body Svg is
 
       Svg_Header;
 
-
-      while Cour /= null loop
-         Trace_Arrete (Cour.Val);
-         Trace_Croix (Cour.Val);
-         Cour := Cour.Suiv;
+      for I in T'Range loop
+         Cour := T(I).Voisins.Tete;
+         while Cour /= null loop
+            Trace_Arrete (Cour.A);
+            Trace_Croix (Cour.A);
+            Cour := Cour.Suiv;
+         end loop;
       end loop;
-
       Svg_Footer;
 
       Close (Fichier_Svg);

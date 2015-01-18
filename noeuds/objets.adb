@@ -1,8 +1,8 @@
 with Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO;
 use Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO;
 
-with Liste, Pile;
-use Liste, Pile;
+with Liste;
+use Liste;
 
 package body Objets is
 
@@ -14,8 +14,14 @@ package body Objets is
    procedure Put (S : Sommet) is
    begin
       Put_Line ("Position: " & Point2Str (S.Pos));
-      Put_Line ("Sommets adjacents: ");
-      -- Affichage du contenu de la pile
+      Put_Line ("Points de controle: ");
+      Put_Line ("  Sens Trigonométrique: ");
+      Put_Line (Point2Str (S.PDC.Trig));
+      Put_Line ("  Sens Inverse: ");
+      Put_Line (Point2Str (S.PDC.Inv));
+
+      Put_Line ("Arretes adjacents: ");
+      -- Affichage du contenu de la liste
       Put (S.Voisins);
    end Put;
 
@@ -29,18 +35,10 @@ package body Objets is
 
    procedure Put (A : Arrete) is
    begin
-      New_Line;
-      Put_Line ("Arrete : [" & Integer'Image (Natural (A.S1)) & ","
+      Put_Line ("  Arrete : [" & Integer'Image (Natural (A.S1)) & ","
                   & Integer'Image (Natural (A.S2)) & " ]");
-      Put_Line ("Longueur: " & Float'Image (A.Longueur));
-      Put_Line ("Milieur: " & Point2Str(A.Milieu));
-      Put_Line ("Points de controle: ");
-      Put_Line ("  Sens Trigonométrique: ");
-      Put_Line (Point2Str (A.PDC.Trig(1)));
-      Put_Line (Point2Str (A.PDC.Trig(2)));
-      Put_Line ("  Sens Inverse: ");
-      Put_Line (Point2Str (A.PDC.Inv(1)));
-      Put_Line (Point2Str (A.PDC.Inv(2)));
+      Put_Line ("  Longueur: " & Float'Image (A.Longueur));
+      Put_Line ("  Milieu: " & Point2Str(A.Milieu));
    end Put;
 
 
