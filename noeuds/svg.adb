@@ -51,8 +51,9 @@ package body Svg is
       -- TODO : Tracer croix
       procedure Trace_Croix (A : Arrete) is
       begin
-         Svg_Line (A.MyPDC.Trig, A.AutresPDC.Trig);
-         Svg_Line (A.MyPDC.Inv, A.AutresPDC.Inv);
+         --  Svg_Line (A.MyPDC.Trig, A.AutresPDC.Trig);
+	 Svg_Line (A.MyPDC.Trig, A.MyPDC.Inv);
+         --  Svg_Line (A.MyPDC.Inv, A.AutresPDC.Inv);
       end Trace_Croix;      
       
       Cour : Pointeur;      
@@ -106,7 +107,9 @@ package body Svg is
 	    end loop;
 	 end Recupere_ArreteCible;
 	 
-	 function Calcul_Angle (SCour, SOpp, SCand : Point) return Float is
+	 function Calcul_Angle (SCour, SOpp, SCand : Point;
+				Trig : Boolean) return Float 
+	 is
 	    
 	    Angle : Float;
 	    LScour_Sopp :Float;
@@ -132,7 +135,11 @@ package body Svg is
 	    
 	    Angle := Arccos(Interm , Base);
 	    
-	    return Angle;
+	    if Trig then
+	       return Angle;
+	    else 
+	       return 360.0 - Angle;
+	    end if;
 	 end Calcul_Angle;
 	 
 	 Arrete_Unique : exception;	 
@@ -151,7 +158,8 @@ package body Svg is
 	       
 	       AngleCour := Calcul_Angle (T(SCour).Pos, 
 	       				  T(SOpp).Pos, 
-	       				  T(SCand).Pos);
+	       				  T(SCand).Pos,
+					  Trig);
 	       
 	       if AngleCour < AngleMin then
 		  Put_Line ("AngleCour: " & Float'Image (AngleCour)
@@ -177,11 +185,11 @@ package body Svg is
       begin
 	 if Trig then
 	    Svg_Curve (ArreteCour.Milieu, ArreteCible.Milieu, 
-		       ArreteCour.AutresPDC.Trig, ArreteCible.MyPDC.Inv);
+		       ArreteCour.MyPDC.Trig, ArreteCible.MyPDC.Inv);
 	    Trig := False;
 	 else
 	    Svg_Curve (ArreteCour.Milieu, ArreteCible.Milieu, 
-		       ArreteCour.AutresPDC.Inv, ArreteCible.MyPDC.Trig);	 
+		       ArreteCour.MyPDC.Inv, ArreteCible.AutresPDC.Trig);	 
 	    Trig := True;
 	 end if;
 	 
@@ -200,8 +208,6 @@ package body Svg is
       loop 	 
 	 AngleMin := 360.0;
 	 SOpp := ArreteCour.AutreID;
-	 Put_Line ("SOpp: " & Integer'Image (Integer(SOpp)));
-	 Put_Line ("SCour: " & Integer'Image (Integer(SCour)));
 	 Cour := T(SCour).Voisins.Tete;
 	 
 	 Trouve_Cible;
@@ -215,7 +221,7 @@ package body Svg is
 	 Count := Count + 1;
 	 -- Si on retombe sur le point de départ, le tracé est terminé      
 	 --  exit when SCour = Depart;
-	 exit when Count = 5; New_Line;
+	 exit when Count = 1; New_Line;
       end loop;
       
    end Trace_Noeuds;

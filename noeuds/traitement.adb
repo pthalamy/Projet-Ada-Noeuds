@@ -38,14 +38,14 @@ package body Traitement is
             Alpha := Arcsin (DY / A.Longueur, Base);
 	    A.MyPDC.Trig := Calcul_PDC (45.0, (1.0 ));
 	    A.AutresPDC.Trig := Calcul_PDC (225.0, (1.0 ));
-	    A.MyPDC.Inv := Calcul_PDC (45.0 + 90.0, (1.0 ));
-	    A.AutresPDC.Inv := Calcul_PDC (225.0 + 90.0, (1.0 ));	    
-	 else
-            Alpha := 360.0 - Arcsin (DY / A.Longueur, Base);
-	    A.AutresPDC.Trig := Calcul_PDC (45.0, (1.0 ));
-	    A.MyPDC.Trig := Calcul_PDC (225.0, (1.0 ));
 	    A.AutresPDC.Inv := Calcul_PDC (45.0 + 90.0, (1.0 ));
 	    A.MyPDC.Inv := Calcul_PDC (225.0 + 90.0, (1.0 ));	    
+	 else
+            Alpha := 360.0 - Arcsin (DY / A.Longueur, Base);
+	    A.MyPDC.Trig := Calcul_PDC (45.0, (1.0 ));
+	    A.AutresPDC.Trig := Calcul_PDC (225.0, (1.0 ));
+	    A.AutresPDC.Inv := Calcul_PDC (45.0 + 90.0, (1.0 ));
+	    A.MYPDC.Inv := Calcul_PDC (225.0 + 90.0, (1.0 ));	    
          end if;
 	 
       end Generer_Croix;

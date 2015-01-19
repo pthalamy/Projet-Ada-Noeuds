@@ -23,6 +23,7 @@ begin
       Parseur.Lecture (Argument(1), Sommets);
 
       Traitement.Calculer_Points_De_Controle (Sommets);
+      Put (Sommets);
       
       Svg.Sauvegarde(Argument(2), Sommets);
    end;
