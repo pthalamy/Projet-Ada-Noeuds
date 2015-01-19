@@ -22,7 +22,7 @@ package body Objets is
 
       Put_Line ("Arretes adjacents: ");
       -- Affichage du contenu de la liste
-      Put (S.Voisins);
+      --  Put (S.Voisins);
    end Put;
 
    procedure Put (T : Tab_Sommets) is
@@ -35,6 +35,9 @@ package body Objets is
 
    procedure Put (A : Arrete) is
    begin
+      Put_Line ("  Segment : [" & 
+		  Integer'Image (Natural (A.MonId)) & ", " & 
+		  Integer'Image (Natural (A.OppId)) & " ]");
       Put_Line ("  Longueur: " & Float'Image (A.Longueur));
       Put_Line ("  Milieu: " & Point2Str(A.Milieu));
       Put_Line ("Mes Points de controle: ");
@@ -44,9 +47,9 @@ package body Objets is
       Put_Line (Point2Str (A.MyPDC.Inv));      
       Put_Line ("Points de controle d'en face: ");
       Put_Line ("  Sens Trigonométrique: ");
-      Put_Line (Point2Str (A.AutresPDC.Trig));
+      Put_Line (Point2Str (A.OppPDC.Trig));
       Put_Line ("  Sens Inverse: ");
-      Put_Line (Point2Str (A.AutresPDC.Inv));      
+      Put_Line (Point2Str (A.OppPDC.Inv));      
 
    end Put;
 

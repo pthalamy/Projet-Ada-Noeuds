@@ -111,7 +111,7 @@ package body Parseur is
          for V in 1..Nb_Arretes loop
             Get (Fichier_Kn, Natural (Indice_Courant));
             Arrete_Courante := new Arrete'(MonId => I,
-					   AutreID => Indice_Courant,
+					   OppID => Indice_Courant,
 					   Longueur => 0.0,
 					   Traitee => False,
 					   Milieu => (others => 0.0),

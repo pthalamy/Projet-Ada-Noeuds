@@ -31,8 +31,8 @@ package Objets is
    end record;
 
    type Arrete is record
-      MonId, AutreID : Indice;
-      MyPDC, AutresPDC : PtsDeCtrl; -- Autres Utiles seulement pour le tracé
+      MonId, OppID : Indice;
+      MyPDC, OppPDC : PtsDeCtrl; -- Autres Utiles seulement pour le tracé
       Traitee : Boolean;
       Longueur : Float;
       Milieu : Point;

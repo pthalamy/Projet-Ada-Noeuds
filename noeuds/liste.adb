@@ -35,8 +35,6 @@ package body Liste is
 
       while Cour /= null loop
 
-	 Put_Line ("  Voisin : [" & 
-		     Integer'Image (Natural (Cour.Ind)) & " ]");
          Put (Cour.A.all);
          New_Line;
          Cour := Cour.Suiv;

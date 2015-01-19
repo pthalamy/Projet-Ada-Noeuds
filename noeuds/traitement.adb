@@ -15,11 +15,9 @@ package body Traitement is
       procedure Generer_Croix (SCour, SOpp: in Point;
 			       A : in out Arrete) is
 	 
-	 Alpha : Float; -- Angle ^LR
          Base : constant Float := 360.0; -- Nous utilisons des degrés
-
          M : Point := A.Milieu;
-         DY : Float;
+
 
 	 function Calcul_PDC (Rot, Fact : Float) return Point is 
 	    Ret : Point;
@@ -32,22 +30,10 @@ package body Traitement is
 	 end Calcul_PDC;
 	 
       begin
-         DY := abs (SCour.Y - Sopp.Y);
-
-         if SCour.X > Sopp.X then
-            Alpha := Arcsin (DY / A.Longueur, Base);
-	    A.MyPDC.Trig := Calcul_PDC (45.0, (1.0 ));
-	    A.AutresPDC.Trig := Calcul_PDC (225.0, (1.0 ));
-	    A.AutresPDC.Inv := Calcul_PDC (45.0 + 90.0, (1.0 ));
-	    A.MyPDC.Inv := Calcul_PDC (225.0 + 90.0, (1.0 ));	    
-	 else
-            Alpha := 360.0 - Arcsin (DY / A.Longueur, Base);
-	    A.MyPDC.Trig := Calcul_PDC (45.0, (1.0 ));
-	    A.AutresPDC.Trig := Calcul_PDC (225.0, (1.0 ));
-	    A.AutresPDC.Inv := Calcul_PDC (45.0 + 90.0, (1.0 ));
-	    A.MYPDC.Inv := Calcul_PDC (225.0 + 90.0, (1.0 ));	    
-         end if;
-	 
+	    A.OppPDC.Inv := Calcul_PDC (45.0, (1.0 )); 
+	    A.MyPDC.Inv := Calcul_PDC (225.0, (1.0 )); 
+	    A.MyPDC.Trig := Calcul_PDC (45.0 + 90.0, (1.0 ));
+	    A.OppPDC.Trig := Calcul_PDC (225.0 + 90.0, (1.0 ));
       end Generer_Croix;
 
       procedure Calculer_Longueur (SCour, SOpp: in Point;
