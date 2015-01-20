@@ -18,7 +18,7 @@ package body Traitement is
          Base : constant Float := 360.0; -- Nous utilisons des degrés
          M : Point := A.Milieu;
 
-
+	 --  La procedure permet le calcul des coordonnees d'un point ayant subit une rotation d'angle Rot et de centre M suivit d'une homothétie de rapport Fact
 	 function Calcul_PDC (Rot, Fact : Float) return Point is 
 	    Ret : Point;
 	 begin
