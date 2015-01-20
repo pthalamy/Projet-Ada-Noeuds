@@ -3,7 +3,8 @@ use Objets, Ada.Text_IO;
 
 package Parseur is
    
-   Erreur_Lecture, Nombre_Sommets_Nul : exception;
+   Erreur_Lecture, Nombre_Sommets_Nul, 
+     Nombre_Voisins_Nul, Kn_Mal_Formate : exception;
    
    -- requiert : Nom_Fichier nom de fichier existant et bien formatté
    -- garantit : Nombre de sommets lus dans le fichier

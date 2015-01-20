@@ -1,8 +1,8 @@
 with Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO;
 use Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO;
 
-with Objets, Liste, Svg, Pile;
-use Objets, Liste, Pile;
+with Objets, Liste, Svg;
+use Objets, Liste;
 
 package body Parseur is
 
@@ -67,6 +67,12 @@ package body Parseur is
          Put_Line (Standard_Error,
                    "Erreur: Erreur de lecture !");
          raise Erreur_Lecture;
+	 
+      when Nombre_Sommets_Nul =>
+	 Put_Line (Standard_Error, 
+		   "erreur parseur: Il n'y a aucun sommet.");
+	 raise Kn_Mal_Formate; 
+	 
    end Lecture_Nombre_Sommets;
 
    procedure Lecture (Nom_Fichier : in String;
@@ -77,8 +83,10 @@ package body Parseur is
       procedure Init_Sommet (I: Indice) is
          Nb_Arretes : Natural;
          Indice_Courant : Indice;
+         Arrete_Courante : PtrArrete;
       begin
-         T(I).Voisins := null;
+         T(I).Voisins.Tete := null;
+         T(I).Voisins.Queue := null;
 
          -- Parsing des attributs du sommet
          ---- Position X
@@ -93,12 +101,30 @@ package body Parseur is
 
          ---- Nombre d'arrètes voisines
          Get (Fichier_Kn, Nb_Arretes);
+	 
+	 if Nb_Arretes = 0 then
+	    raise Nombre_Voisins_Nul;
+	 end if;      
+	 
          ---- Récuperation des indices des sommets voisins et stockage
          ---- dans une pile/liste.
          for V in 1..Nb_Arretes loop
             Get (Fichier_Kn, Natural (Indice_Courant));
-            Push (T(I).Voisins, Indice_Courant);
+            Arrete_Courante := new Arrete'(MonId => I,
+					   OppID => Indice_Courant,
+					   Longueur => 0.0,
+					   Traitee => False,
+					   Milieu => (others => 0.0),
+					   others => (others => 
+							(others => 0.0)) );
+            Enqueue (T(I).Voisins, Indice_Courant, Arrete_Courante);
          end loop;
+	 
+      exception
+	 when Nombre_Voisins_Nul =>
+	    Put_Line (Standard_Error, 
+		      "erreur parseur: Un voisin a un nombre de voisin nul.");
+	    raise Kn_Mal_Formate;
       end Init_Sommet;
 
    begin
