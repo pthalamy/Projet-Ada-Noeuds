@@ -17,17 +17,6 @@ package body Traitement is
 	 
          Base : constant Float := 360.0; -- Nous utilisons des degrés
          M : Point := A.Milieu;
-<<<<<<< HEAD
-         DY : Float;
-	 
-	 function Calcul_PDC (Rot, Fact : Float) return Point is 
-	    Ret : Point;
-	 begin
-	    Ret.X := M.X + Fact * (Cos (Rot, Base) * (L.X - M.X) 
-				     - Sin (Rot, Base) * (L.Y - M.Y));
-	    Ret.Y := M.Y + Fact * (Sin (Rot, Base) * (L.X - M.X)
-				     + Cos (Rot,Base) * (L.Y - M.Y));
-=======
 
 
 	 function Calcul_PDC (Rot, Fact : Float) return Point is 
@@ -37,32 +26,14 @@ package body Traitement is
 				     - Sin (Rot, Base) * (Sopp.Y - M.Y));
 	    Ret.Y := M.Y + Fact * (Sin (Rot, Base) * (Sopp.X - M.X)
 				     + Cos (Rot,Base) * (Sopp.Y - M.Y));
->>>>>>> ListeVoisins
 	    return Ret;
 	 end Calcul_PDC;
 	 
       begin
-<<<<<<< HEAD
-
-         DY := abs (R.Y - L.Y);
-
-         if R.X > L.X then
-            Alpha := Arcsin (DY / A.Longueur, Base);
-         else
-            Alpha := 360.0 - Arcsin (DY / A.Longueur, Base);
-         end if;
-
-         A.PDC.Trig(1) := Calcul_PDC (45.0, (1.0 / 2.0));
-         A.PDC.Trig(2) := Calcul_PDC (225.0, (1.0 / 2.0));
-         A.PDC.Inv(1) := Calcul_PDC (45.0 + 90.0, (1.0 / 2.0));
-         A.PDC.Inv(2) := Calcul_PDC (225.0 + 90.0, (1.0 / 2.0));
-	 
-=======
 	    A.OppPDC.Inv := Calcul_PDC (45.0, (1.0 )); 
 	    A.MyPDC.Inv := Calcul_PDC (225.0, (1.0 )); 
 	    A.MyPDC.Trig := Calcul_PDC (45.0 + 90.0, (1.0 ));
 	    A.OppPDC.Trig := Calcul_PDC (225.0 + 90.0, (1.0 ));
->>>>>>> ListeVoisins
       end Generer_Croix;
 
       procedure Calculer_Longueur (SCour, SOpp: in Point;
