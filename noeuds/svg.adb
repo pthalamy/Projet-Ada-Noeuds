@@ -54,14 +54,25 @@ package body Svg is
          Svg_Line (A.MyPDC.Inv, A.OppPDC.Inv, Bleu);
       end Trace_Croix;      
       
+      -- Tableau de marquage des arretes deja tracées, afin d'éviter de 
+      --  tracer chaque segment deux fois
+      Marque_Traces : array (T'Range, T'Range) of Boolean 
+	:= (others => (others => False));
       Cour : Pointeur;      
    begin
       for I in T'Range loop
          Cour := T(I).Voisins.Tete;
          while Cour /= null loop
-	    Svg_Line (T(I).Pos, T(Cour.Ind).Pos,Noir); -- Trace l'arrete
-            Trace_Croix (Cour.A.all);
-            Cour := Cour.Suiv;
+	    if not Marque_Traces (I, Cour.Ind) 
+	      and not Marque_Traces (Cour.Ind, I) then
+	       Svg_Line (T(I).Pos, T(Cour.Ind).Pos,Noir); -- Trace l'arrete
+	       Trace_Croix (Cour.A.all);
+	       
+	       -- Marquage anti-redondance
+	       Marque_Traces (I, Cour.Ind) := True;
+	       Marque_Traces (Cour.Ind, I) := True;
+	    end if;
+	    Cour := Cour.Suiv;
          end loop;
       end loop;      
    end Trace_Intermediaire;
