@@ -117,9 +117,9 @@ un tableau indexé de 1 au nombre de sommet du programme et qui stocke
 des elements de types \emph{Sommet}. Un sommet est un \emph{Point}, de
 coordonnée \emph{X, Y}, et une liste chaîné de voisins. \\
 Cette liste, nommé \emph{Liste\_Voisin}, contient pour chaque cellule,
-un element de type \emph{Arrete}, ainsi que l'indice du voisin qui lui
+un element de type \emph{Arete}, ainsi que l'indice du voisin qui lui
 est associée, afin de la repérer aisément. \\
-Enfin, une \emph{Arrete} contient l'ID du sommet qui la stocke et celui
+Enfin, une \emph{Arete} contient l'ID du sommet qui la stocke et celui
 qui lui est opposé, ainsi que les points de contrôle de chacun sur
 cette arête. On stocke aussi le milieu et la longueur du sommet, pour
 éviter d'avoir à les recalculer à chaque utilisation. L'inconvénient
@@ -148,7 +148,7 @@ Le tracé des nœuds est effectué par la procedure \emph{Trace\_Noeuds} du
 paquet \emph{Svg}.On commence le tracé à partir de la première arête du premier sommet du tableau de sommets. Cette fonction appelle d'autres procédures de calcul du paquet traitement pour calculer et/ou récupérer les coordonnées de 4 points :
 \begin{itemize}
 \item Ceux du point de départ, le milieu de l'arête courante du sommet considéré.
-\item Ceux du point d'arrivé, récupéré par l'intermediaire de l'arrete cible, elle même déterminée par l'angle fait avec l'arête courante (le sens de celui-ci dépendera du sens de rotation, défini par le booléen Trig). L'arête cible sera choisie si l'angle qu'elle fait avec l'arête courante est minimum ou maximum (selon la valeur du booléen Min passée en argument lors de l'exécution).
+\item Ceux du point d'arrivé, récupéré par l'intermediaire de l'arête cible, elle même déterminée par l'angle fait avec l'arête courante (le sens de celui-ci dépendera du sens de rotation, défini par le booléen Trig). L'arête cible sera choisie si l'angle qu'elle fait avec l'arête courante est minimum ou maximum (selon la valeur du booléen Min passée en argument lors de l'exécution).
 \item Ceux du point de contrôle de départ qui dépenderont du sommet considéré sur l'arête courante ainsi que du sens dans lequel sera calculé l'angle (valeur du booléen Trig).
 \item Ceux du point de contrôle d'arrivée qui dépenderont du sommet considéré sur l'arête cible ainsi que du sens de rotation.
 \end{itemize}
