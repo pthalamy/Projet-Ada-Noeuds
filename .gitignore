@@ -12,3 +12,8 @@ noeuds/noeuds
 
 #Svg files
 **/*.svg
+Rapport/rapport.aux
+
+*.log
+
+Rapport/rapport.pdf
