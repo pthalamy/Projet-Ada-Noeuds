@@ -88,16 +88,18 @@
 \section {Vue d'ensemble du projet}
 Tous d'abord, nous avons bien implémenté dans notre programme tout ce
 que décrivait l'énoncé. Cependant, nous avons en plus décidé de supporter à la
-fois le tracé des nœuds selon l'angle \b{max} et \b{min}. C'est pourquoi, afin
+fois le tracé des nœuds selon les angles \textbf{max} et \textbf{min}. C'est pourquoi, afin
 d'exécuter le programme, il faudra utiliser la commande :
 \shellcmd{./noeuds banana\_X.kn output.svg min} 
 pour tracer selon l'angle minimum, ou, pour l'angle maximum :
 \shellcmd{./noeuds banana\_X.kn output.svg max} 
+Après avoir compilé avec :
+\shellcmd{gnatmake noeuds.adb} 
 
 Le projet comprend 6 modules :
 \begin{enumerate}
 \item \emph{Noeuds} : Le main faisant appels aux procédures de tous
-  les autres modules.
+  les autres modules. 
 \item \emph{Objets} : Comprend les définitions de tous les objets et
   structures de données utilisées dans le projet, ainsi que des
   procédures pour en afficher le contenu.
@@ -106,7 +108,7 @@ Le projet comprend 6 modules :
 \item \emph{Parseur} : Procédures d'extraction des données des fichiers
   d'entrée pour stockage dans les structures appropriées.
 \item \emph{Traitement} : Contient les procédures d'exploitation des
-  données stockées (Calculs des points de contrôle, milieu
+  données stockées (Calcul des points de contrôle, milieu
   suivant...).
 \item \emph{Svg} : Réalise le tracé intermédiaire et coordonne le tracé des nœuds.
 \end{enumerate}
@@ -114,9 +116,9 @@ Le projet comprend 6 modules :
 \section {Modélisation des données}
 La structure de donnée principale du programme est \emph{Tab\_Sommets},
 un tableau indexé de 1 au nombre de sommet du programme et qui stocke
-des elements de types \emph{Sommet}. Un sommet est un \emph{Point}, de
-coordonnée \emph{X, Y}, et une liste chaîné de voisins. \\
-Cette liste, nommé \emph{Liste\_Voisin}, contient pour chaque cellule,
+des elements de types \emph{Sommet}. Un sommet est composé d'un \emph{Point}, de
+coordonnée \emph{(X, Y)}, et une liste chaîné de voisins. \\
+Cette liste, nommée \emph{Liste\_Voisin}, contient pour chaque cellule,
 un element de type \emph{Arete}, ainsi que l'indice du voisin qui lui
 est associée, afin de la repérer aisément. \\
 Enfin, une \emph{Arete} contient l'ID du sommet qui la stocke et celui
@@ -142,18 +144,24 @@ Afin d'éviter de tracer deux fois les arêtes à cause de la redondance
 évoquée dans la section précédente, on utilise un tableau de marquage à deux
 dimensions, de même indexation que le tableau de sommets. Avant de
 tracer l'arête I--J, on vérifie que T(I, J) et T(J, I) vaut \emph{false},
-sinon on ignore.
+sinon on l'ignore.
 \section {Tracé des nœuds}
 Le tracé des nœuds est effectué par la procedure \emph{Trace\_Noeuds} du
-paquet \emph{Svg}.On commence le tracé à partir de la première arête du premier sommet du tableau de sommets. Cette fonction appelle d'autres procédures de calcul du paquet traitement pour calculer et/ou récupérer les coordonnées de 4 points :
+paquet \emph{Svg}. On commence le tracé à partir de la première arête du premier sommet du tableau de sommets. Cette fonction appelle d'autres procédures de calcul du paquet traitement pour calculer et/ou récupérer les coordonnées de 4 points :
 \begin{itemize}
 \item Ceux du point de départ, le milieu de l'arête courante du sommet considéré.
-\item Ceux du point d'arrivé, récupéré par l'intermediaire de l'arête cible, elle même déterminée par l'angle fait avec l'arête courante (le sens de celui-ci dépendera du sens de rotation, défini par le booléen Trig). L'arête cible sera choisie si l'angle qu'elle fait avec l'arête courante est minimum ou maximum (selon la valeur du booléen Min passée en argument lors de l'exécution).
-\item Ceux du point de contrôle de départ qui dépenderont du sommet considéré sur l'arête courante ainsi que du sens dans lequel sera calculé l'angle (valeur du booléen Trig).
-\item Ceux du point de contrôle d'arrivée qui dépenderont du sommet considéré sur l'arête cible ainsi que du sens de rotation.
+\item Ceux du point d'arrivé, récupéré par l'intermédiaire de l'arête
+  cible, elle même déterminée par l'angle fait avec l'arête courante
+  (le sens de celui-ci dépendra du sens de rotation, défini par le
+  booléen Trig). L'arête cible sera choisie si l'angle qu'elle fait
+  avec l'arête courante est minimum ou maximum (selon la valeur du
+  booléen Min passée en argument lors de l'exécution), au sein de la
+  liste de voisins.
+\item Ceux du point de contrôle de départ qui dépendront du sommet considéré sur l'arête courante ainsi que du sens dans lequel sera calculé l'angle (valeur du booléen Trig).
+\item Ceux du point de contrôle d'arrivée qui dépendront du sommet considéré sur l'arête cible ainsi que du sens de rotation.
 \end{itemize}
 Une fois calculés, ces coordonnées seront utilisées dans la fonction
 \emph{Trace\_Bezier} pour le tracé des nœuds dans le fichier de sortie. 
-Afin de déterminé la fin du tracé, nous incrémentons à chaque tracé un
+Afin de déterminer la fin du tracé, nous incrémentons à chaque tracé un
 compteur allant de 0 à 2$\times$(Nombre\verb+_+Sommets-1). 
 \end{document}
