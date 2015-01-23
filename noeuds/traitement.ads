@@ -19,7 +19,7 @@ package Traitement is
 			   SCour, SCand, SOpp, SCible : in out Indice;
 			   AngleCour, AngleExt : in out Float;
 			   VCour : in out Pointeur;
-			   ArreteCible : out Arrete;
+			   AreteCible : out Arete;
 			   Trig, Min : in Boolean);
    
 end Traitement;

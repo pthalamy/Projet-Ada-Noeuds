@@ -8,7 +8,7 @@ package body Liste is
 
    procedure Enqueue (L : in out Liste_Voisins;
                       Ind : in Indice;
-                      A : in PtrArrete)
+                      A : in PtrArete)
    is
    begin
       if L.Tete = null then

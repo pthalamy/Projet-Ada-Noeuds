@@ -85,9 +85,9 @@ package body Parseur is
       -- Crée et remplit un objet sommet pour chaque définition 
       -- dans le fichier kn
       procedure Init_Sommet (I: Indice) is
-         Nb_Arretes : Natural;
+         Nb_Aretes : Natural;
          Indice_Courant : Indice;
-         Arrete_Courante : PtrArrete;
+         Arete_Courante : PtrArete;
       begin
          T(I).Voisins.Tete := null;
          T(I).Voisins.Queue := null;
@@ -104,23 +104,23 @@ package body Parseur is
          T(I).Pos.Y := T(I).Pos.Y + (Y_Max - Y_Min) * Coeff_Marge / 2.0;
 
          ---- Nombre d'arrètes voisines
-         Get (Fichier_Kn, Nb_Arretes);
+         Get (Fichier_Kn, Nb_Aretes);
 	 
-	 if Nb_Arretes = 0 then
+	 if Nb_Aretes = 0 then
 	    raise Nombre_Voisins_Nul;
 	 end if;      
 	 
          ---- Récuperation des indices des sommets voisins et stockage
          ---- dans une pile/liste.
-         for V in 1..Nb_Arretes loop
+         for V in 1..Nb_Aretes loop
             Get (Fichier_Kn, Natural (Indice_Courant));
-            Arrete_Courante := new Arrete'(MonId => I,
+            Arete_Courante := new Arete'(MonId => I,
 					   OppID => Indice_Courant,
 					   Longueur => 0.0,
 					   Milieu => (others => 0.0),
 					   others => (others => 
 							(others => 0.0)) );
-            Enqueue (T(I).Voisins, Indice_Courant, Arrete_Courante);
+            Enqueue (T(I).Voisins, Indice_Courant, Arete_Courante);
          end loop;
 	 
       exception

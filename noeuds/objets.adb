@@ -20,7 +20,7 @@ package body Objets is
    begin
       Put_Line ("Position: " & Point2Str (S.Pos));
 
-      Put_Line ("Arretes adjacents: ");
+      Put_Line ("Aretes adjacents: ");
       -- Affichage du contenu de la liste
       Put (S.Voisins);
    end Put;
@@ -33,7 +33,7 @@ package body Objets is
       end loop;
    end Put;
 
-   procedure Put (A : Arrete) is
+   procedure Put (A : Arete) is
    begin
       Put_Line ("  Segment : [" & 
 		  Integer'Image (Natural (A.MonId)) & ", " & 

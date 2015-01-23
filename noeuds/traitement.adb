@@ -16,7 +16,7 @@ package body Traitement is
       
       -- Calcule les coordonnées des points de contrôle pour une arrete A
       procedure Calculer_Croix (SCour, SOpp: in Point;
-			       A : in out Arrete) is
+			       A : in out Arete) is
 	 
          Base : constant Float := 360.0; -- Nous utilisons des degrés
          M : Point := A.Milieu;
@@ -42,7 +42,7 @@ package body Traitement is
       -- Calcule la longueur de l'arrete SCour--Opp et détermine son milieu
       -- Stocke le resultat en attribut de A
       procedure Calculer_Longueur (SCour, SOpp: in Point;
-				     A : in out Arrete) 
+				     A : in out Arete) 
       is
 
          function Hypotenuse (A, B : Float) return Float is
@@ -133,26 +133,26 @@ package body Traitement is
 			   SCour, SCand, SOpp, SCible : in out Indice;
 			   AngleCour, AngleExt : in out Float;
 			   VCour : in out Pointeur;
-			   ArreteCible : out Arrete;
+			   AreteCible : out Arete;
 			   Trig, Min : in Boolean) is
       
       -- Recupere l'arrete SCible..SCour dans la liste de voisins de SCible
-      procedure Recupere_ArreteCible is
+      procedure Recupere_AreteCible is
 	 Local_Cour : Pointeur := T(SCible).Voisins.Tete;
       begin
 	 while Local_Cour /= null loop
 	    if Local_Cour.Ind = SCour then
-	       ArreteCible := Local_Cour.A.all;
+	       AreteCible := Local_Cour.A.all;
 	       return; 
 	    end if;
 	    Local_Cour := Local_Cour.Suiv;
 	 end loop;
-      end Recupere_ArreteCible;
+      end Recupere_AreteCible;
       
-      Arrete_Unique : exception; -- Le sommet courant n'a qu'un voisin
+      Arete_Unique : exception; -- Le sommet courant n'a qu'un voisin
    begin 
       if VCour.Suiv = null then
-	 raise Arrete_Unique; 
+	 raise Arete_Unique; 
       end if;		
       
       while VCour /= null loop
@@ -181,13 +181,13 @@ package body Traitement is
 	 VCour := VCour.Suiv;
       end loop;
 
-      Recupere_ArreteCible; 
+      Recupere_AreteCible; 
       
    exception
-      when Arrete_Unique =>
+      when Arete_Unique =>
 	 SCible := VCour.Ind;
 
-	 Recupere_ArreteCible;
+	 Recupere_AreteCible;
    end Trouve_Cible;
 
    

@@ -48,7 +48,7 @@ package body Svg is
          Put_Line (Fichier_Svg, ";stroke-width:0.1""/>");
       end Svg_Line;
 
-      procedure Trace_Croix (A : Arrete) is
+      procedure Trace_Croix (A : Arete) is
       begin
          Svg_Line (A.MyPDC.Trig, A.OppPDC.Trig, Bleu);
          Svg_Line (A.MyPDC.Inv, A.OppPDC.Inv, Bleu);
@@ -93,7 +93,7 @@ package body Svg is
 		     & Pt2Svg (A) & """ />");
       end Svg_Curve;
                   
-      procedure Trace_Bezier (ArreteCour, ArreteCible : in Arrete;
+      procedure Trace_Bezier (AreteCour, AreteCible : in Arete;
 			      Trig : in out Boolean;
 			      PathStyleSet : in out Boolean) is
       begin
@@ -108,12 +108,12 @@ package body Svg is
 	    PathStyleSet := True;
 	 end if;
 	 if Trig then
-	    Svg_Curve (ArreteCour.Milieu, ArreteCible.Milieu, 
-		       ArreteCour.MyPDC.Trig, ArreteCible.OppPDC.Inv);
+	    Svg_Curve (AreteCour.Milieu, AreteCible.Milieu, 
+		       AreteCour.MyPDC.Trig, AreteCible.OppPDC.Inv);
 	    Trig := False;
 	 else
-	    Svg_Curve (ArreteCour.Milieu, ArreteCible.Milieu, 
-		       ArreteCour.MyPDC.Inv, ArreteCible.OppPDC.Trig);	 
+	    Svg_Curve (AreteCour.Milieu, AreteCible.Milieu, 
+		       AreteCour.MyPDC.Inv, AreteCible.OppPDC.Trig);	 
 	    Trig := True;
 	 end if;
 	 
@@ -123,7 +123,7 @@ package body Svg is
       
       Depart : Indice; -- Sommet de depart du tracé
       SCour, SOpp, SCand, SCible : Indice;
-      ArreteCour, ArreteCible : Arrete;
+      AreteCour, AreteCible : Arete;
       AngleExt : Float; -- Angle Extremum (min ou max)
       AngleCour : Float;
       Trig : Boolean; -- Indique le sens de rotation à utiliser pour les calculs
@@ -143,7 +143,7 @@ package body Svg is
       SCible := 0; 
       AngleCour := 0.0;
       
-      ArreteCour := T(SCour).Voisins.Tete.A.all;
+      AreteCour := T(SCour).Voisins.Tete.A.all;
       
       Trig := True; -- On part dans le sens Trigo
       
@@ -154,17 +154,17 @@ package body Svg is
 	    AngleExt := 0.0;
 	 end if;
 	 
-	 SOpp := ArreteCour.OppID;
+	 SOpp := AreteCour.OppID;
 	 VCour := T(SCour).Voisins.Tete;
 	 
 	 Traitement.Trouve_Cible (T, SCour, SCand, SOpp, SCible, 
 				  AngleCour, AngleExt, 
-				  VCour, ArreteCible, Trig, Min);
+				  VCour, AreteCible, Trig, Min);
 	 
-	 Trace_Bezier (ArreteCour, ArreteCible, Trig, PathStyleSet);
+	 Trace_Bezier (AreteCour, AreteCible, Trig, PathStyleSet);
 	 
 	 SCour := SCible;
-	 ArreteCour := ArreteCible;
+	 AreteCour := AreteCible;
 	 
 	 Count := Count + 1;
 	 exit when Count = 2 * (T'Last - 1); 

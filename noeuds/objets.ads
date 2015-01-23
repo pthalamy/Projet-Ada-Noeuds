@@ -29,17 +29,17 @@ package Objets is
                                -- des sommets adjacents
    end record;
 
-   type Arrete is record
+   type Arete is record
       MonId, OppID : Indice; 
       MyPDC, OppPDC : PtsDeCtrl;
       Longueur : Float;
       Milieu : Point;
    end record;
-   type PtrArrete is access Arrete;
+   type PtrArete is access Arete;
 
    type Cellule is record
       Ind : Indice;
-      A : PtrArrete;
+      A : PtrArete;
       Suiv : Pointeur;
    end record;
 
@@ -55,6 +55,6 @@ package Objets is
    procedure Put (P : Point);
    procedure Put (S : Sommet);
    procedure Put (T : Tab_Sommets);
-   procedure Put (A : Arrete);
+   procedure Put (A : Arete);
 
 end Objets;
