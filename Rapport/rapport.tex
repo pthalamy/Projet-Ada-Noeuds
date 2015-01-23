@@ -21,7 +21,19 @@
 \section {Modélisation des données}
 
 \section {Tracé intermédiaire}
-
+L'ensemble du tracé est assuré par la fonction Sauvegarde du paquet svg.
+\\
+Le tracé intermédiaire du graphe (arrête et croix sur leurs milieux) est effectué après le parsage du fichier kn d'entré par la fonction
+Trace\verb+_+Intermediare du paquet svg, prenant en argument le tableau de sommets rempli précédemment. Nous avons choisi de tracer les croix en bleu pour une meilleur distinction sur le rendu svg.\\
+\\
+Les arrêtes sont par ailleurs tracées deux fois du fait de la présence de l'indexe du voisin j du sommet i et inversement. Cela aurait compliqué le code que d'éliminer cette redondance, le double tracé des arrêtes n'étant pas par ailleurs gênant sur le rendu svg ni pour la suite du tracé.
 \section {Tracé des nœuds}
-
+Le tracé des nœuds est effectué par la procedure Trace\verb+_+nœuds du paquet svg.On commence le tracé à partir du premier sommet du tableau de sommets dans lequel on a stocké les données parsées. Cette fonction appelle d'autres procédures de calcul du paquet traitement pour calculer et/ou récupérer les coordonnees de 4 points :
+\begin{itemize}
+\item Ceux du point de départ, le milieu de l'arrête courante du sommet considéré.
+\item Ceux du point d'arrivé, récupéré par l'intermediaire de l'arrete cible, elle même déterminée par l'angle fait avec l'arrête courante (le sens de celui-ci dépendera du sens de rotation, défini par le booléen Trig). L'arrête cible sera choisie si l'angle qu'elle fait avec l'arrête courante est minimum ou maximum (selon la valeur du booléen Min passée en argument lors de l'exécution).
+\item Ceux du point de contrôle de départ qui dépenderont du sommet considéré sur l'arrête courante ainsi que du sens dans lequel sera calculé l'angle (valeur du booléen Trig).
+\item Ceux du point de contrôle d'arrivée qui dépenderont du sommet considéré sur l'arrête cible ainsi que du sens de rotation
+\end{itemize}
+Une fois calculés, ces coordonnées seront utilisées dans la fonction Trace\verb+_+Bezier pour le tracé des noeuds. Le compteur C sera initialisé à 0 et indiquera la fin du tracé quand il aura atteint la valeur 2$\times$(Nombre\verb+_+Sommets-1) contenus dans le fichier kn.
 \end{document}
