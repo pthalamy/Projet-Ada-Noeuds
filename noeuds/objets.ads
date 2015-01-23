@@ -3,7 +3,6 @@ use Ada.Text_IO, Ada.Integer_Text_IO;
 
 package Objets is
 
-   -- Types personnalisés
    type Indice is new Natural;
 
    -- Types de gestion de liste
@@ -31,9 +30,8 @@ package Objets is
    end record;
 
    type Arrete is record
-      MonId, OppID : Indice;
-      MyPDC, OppPDC : PtsDeCtrl; -- Autres Utiles seulement pour le tracé
-      Traitee : Boolean;
+      MonId, OppID : Indice; 
+      MyPDC, OppPDC : PtsDeCtrl;
       Longueur : Float;
       Milieu : Point;
    end record;
@@ -53,6 +51,7 @@ package Objets is
    X_Min, Y_Min : Float;
    Coeff_Marge: Float := 1.5;
    
+   -- Procedure de tracé des objets
    procedure Put (P : Point);
    procedure Put (S : Sommet);
    procedure Put (T : Tab_Sommets);

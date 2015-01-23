@@ -22,7 +22,7 @@ package body Objets is
 
       Put_Line ("Arretes adjacents: ");
       -- Affichage du contenu de la liste
-      --  Put (S.Voisins);
+      Put (S.Voisins);
    end Put;
 
    procedure Put (T : Tab_Sommets) is

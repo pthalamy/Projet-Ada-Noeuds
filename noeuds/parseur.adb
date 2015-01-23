@@ -5,12 +5,14 @@ with Objets, Liste, Svg;
 use Objets, Liste;
 
 package body Parseur is
-
+      
    procedure Lecture_Nombre_Sommets (Nom_Fichier : in String;
                                      Nb_Sommets : out Indice)
    is
       Fichier_Kn : File_Type;
-
+      
+      -- Determine la taille de la grille svg de l'image de sortie en fonction
+      --  des coordonnées max et min des sommets du fichien kn
       procedure InitialisationSVG is
          -- Variables de comparaison
          X_Cour : Float := 0.0;
@@ -79,7 +81,9 @@ package body Parseur is
                       T : in out Tab_Sommets)
    is
       Fichier_Kn : File_Type;
-
+      
+      -- Crée et remplit un objet sommet pour chaque définition 
+      -- dans le fichier kn
       procedure Init_Sommet (I: Indice) is
          Nb_Arretes : Natural;
          Indice_Courant : Indice;
@@ -113,7 +117,6 @@ package body Parseur is
             Arrete_Courante := new Arrete'(MonId => I,
 					   OppID => Indice_Courant,
 					   Longueur => 0.0,
-					   Traitee => False,
 					   Milieu => (others => 0.0),
 					   others => (others => 
 							(others => 0.0)) );
